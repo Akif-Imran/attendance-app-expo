@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Login } from "../../screens/auth";
 import TeacherStack from "../teacherStack";
+import { AuthStackParamsList } from "../../types";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<AuthStackParamsList>();
 const AuthStack = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   return (

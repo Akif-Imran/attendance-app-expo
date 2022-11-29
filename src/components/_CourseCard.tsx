@@ -6,16 +6,20 @@ import bg_Image_2 from "../assets/images/jpg/abstract-bg-2.jpg";
 import bg_Image_3 from "../assets/images/jpg/abstract-bg-3.jpg";
 import bg_Image_4 from "../assets/images/jpg/abstract-bg-4.jpg";
 import { useNavigation } from "@react-navigation/native";
+import { TeacherStackScreenProps } from "../types";
+import { gStyles } from "../theme";
 
 const images = [bg_Image_1, bg_Image_2, bg_Image_3, bg_Image_4];
 
 const _CourseCard = (props) => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<TeacherStackScreenProps<"CoursesList">["navigation"]>();
   const { session, course, title } = props.course;
 
   return (
     <Card
       style={styles.mainContainer}
+      elevation={3}
       onPress={() =>
         navigation.navigate("ClassesList", { course: props.course })
       }
@@ -24,9 +28,9 @@ const _CourseCard = (props) => {
         source={images[Math.floor(Math.random() * 4)]}
         style={styles.imageContainer}
       />
-      <View style={styles.couresDetailsContainer}>
-        <Text style={styles.courseDetailsText}>{`${session} | ${course}`}</Text>
-        <Text style={styles.courseTitleText}>{title}</Text>
+      <View style={styles.coursesDetailsContainer}>
+        <Text style={gStyles.cardDetailsText}>{`${session} | ${course}`}</Text>
+        <Text style={gStyles.cardTitleText}>{title}</Text>
       </View>
     </Card>
   );
@@ -37,7 +41,9 @@ export default _CourseCard;
 const styles = StyleSheet.create({
   mainContainer: {
     // flex: 1,
-    elevation: 8,
+    // elevation: 8,
+    marginHorizontal: 4,
+    marginVertical: 2,
     overflow: "hidden",
     borderRadius: 8,
     marginBottom: 5,
@@ -49,7 +55,7 @@ const styles = StyleSheet.create({
     height: 150,
     borderWidth: 1,
   },
-  couresDetailsContainer: {
+  coursesDetailsContainer: {
     padding: 12,
   },
   courseTitleText: {
@@ -64,7 +70,8 @@ const styles = StyleSheet.create({
   courseDetailsText: {
     paddingHorizontal: 4,
     paddingVertical: 2,
-    fontSize: 18,
+    fontSize: 16,
+    fontFamily: "Visby-Regular",
     color: "#757575",
   },
 });

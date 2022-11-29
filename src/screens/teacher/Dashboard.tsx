@@ -1,13 +1,22 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { TeacherStackScreenProps } from "../../types";
 
 const Dashboard = () => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<TeacherStackScreenProps<"Dashboard">["navigation"]>();
   return (
-    <View>
-      <Text>Dashboard</Text>
-    </View>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("CoursesList")}
+      style={{
+        padding: 10,
+        borderWidth: 1,
+      }}
+    >
+      <Text>Courses</Text>
+    </TouchableOpacity>
   );
 };
 

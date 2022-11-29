@@ -14,21 +14,32 @@ interface _ButtonProps {
   bgColor?: string;
   title: string;
   onPress: () => void;
-  style?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
+  // style?: StyleProp<ViewStyle>;
+  // textStyle?: StyleProp<TextStyle>;
+  size: "small" | "medium" | "large";
 }
 
-const _Button: FC<_ButtonProps> = ({
-  color,
-  bgColor,
-  title,
-  onPress,
-  style,
-  textStyle,
-}) => {
+const btnSize = {
+  small: styles.small,
+  medium: styles.medium,
+  large: styles.large,
+};
+
+const btnText = {
+  small: styles.textSmall,
+  medium: styles.textMedium,
+  large: styles.textLarge,
+};
+
+const _Button: FC<_ButtonProps> = (props) => {
+  const { color, bgColor, title, onPress, size } = props;
   return (
     <TouchableOpacity
-      style={[styles.mainContainer, { backgroundColor: bgColor }, style]}
+      style={[
+        styles.mainContainer,
+        btnSize[size],
+        { backgroundColor: bgColor },
+      ]}
       activeOpacity={0.5}
       onPress={onPress}
     >
@@ -38,7 +49,7 @@ const _Button: FC<_ButtonProps> = ({
           {
             color,
           },
-          textStyle,
+          btnText[size],
         ]}
       >
         {title}

@@ -2,19 +2,18 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Card } from "react-native-paper";
 import { _Icon } from "./general";
-import { Button } from "react-native-paper";
+import { gStyles } from "../theme";
+import { _Button } from "./general";
+import { useNavigation } from "@react-navigation/native";
+import { TeacherStackScreenProps } from "../types";
 
 const _ClassCard = ({ item }) => {
+  const navigation =
+    useNavigation<TeacherStackScreenProps<"ClassesList">["navigation"]>();
   return (
     <Card style={styles.mainCardContainer}>
       <View style={styles.mainContainer}>
         <View style={styles.iconContainer}>
-          {/* <_VectorIcons
-            type={'Ionicons'}
-            name={'md-square-outline'}
-            size={85}
-            color={'#999999'}
-          /> */}
           <Image
             tintColor="#999999"
             source={require("../assets/images/png/class.png")}
@@ -22,17 +21,21 @@ const _ClassCard = ({ item }) => {
           />
         </View>
         <View style={styles.detailsContainer}>
-          <Text style={styles.classTitleText}>{item.name}</Text>
-          <Text style={styles.classDetailsText}>
+          <Text style={gStyles.cardTitleText}>{item.name}</Text>
+          <Text style={gStyles.cardDetailsText}>
             {item.conductedClasses} classes conducted.
           </Text>
           <View style={styles.buttonContainer}>
-            <Button mode="contained" style={styles.button}>
-              Update
-            </Button>
-            <Button mode="outlined" style={styles.button}>
-              Mark
-            </Button>
+            <View style={styles.individualButtonContainer}>
+              <_Button
+                title="Mark"
+                onPress={() => navigation.navigate("StudentList")}
+                size="small"
+              />
+            </View>
+            <View style={styles.individualButtonContainer}>
+              <_Button title="Update" onPress={() => {}} size="small" />
+            </View>
           </View>
         </View>
       </View>
@@ -40,7 +43,7 @@ const _ClassCard = ({ item }) => {
   );
 };
 
-export { _ClassCard };
+export default _ClassCard;
 
 const styles = StyleSheet.create({
   mainCardContainer: {
@@ -60,7 +63,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  detailsContainer: { flex: 3 },
+  detailsContainer: {
+    flex: 3,
+  },
   classTitleText: {
     paddingHorizontal: 4,
     paddingVertical: 2,
@@ -70,15 +75,17 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#424242",
   },
-  classDetailsText: {
-    paddingHorizontal: 4,
-    paddingVertical: 2,
-    fontSize: 15,
-    color: "#757575",
-  },
   buttonContainer: {
+    flex: 1,
     flexDirection: "row-reverse",
     justifyContent: "center",
+    // borderWidth: 1,
+  },
+  individualButtonContainer: {
+    flex: 1,
+    justifyContent: "center",
+    height: 40,
+    // borderWidth: 1,
   },
   button: {
     flex: 1,

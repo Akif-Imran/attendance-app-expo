@@ -8,22 +8,41 @@ import {
   CoursesList,
   Notification,
   Dashboard,
+  StudentList,
 } from "../../screens/teacher";
+import { TeacherStackParamsList } from "../../types";
+import { colors } from "../../theme";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<TeacherStackParamsList>();
 
 interface TeacherStackProps {
   setAuth: Dispatch<React.SetStateAction<boolean>>;
 }
 const TeacherStack: FC<TeacherStackProps> = () => {
   return (
-    <Stack.Navigator>
-      {/* <Stack.Screen name="Dashboard" component={Dashboard} /> */}
-      <Stack.Screen name="CoursesList" component={CoursesList} />
-      <Stack.Screen name="ClassesList" component={ClassesList} />
-      <Stack.Screen name="Course" component={Course} />
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: colors.titleText,
+      }}
+    >
+      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen
+        name="CoursesList"
+        component={CoursesList}
+        options={{
+          title: "Courses List",
+        }}
+      />
+      <Stack.Screen
+        name="ClassesList"
+        component={ClassesList}
+        options={{
+          title: "Classes List",
+        }}
+      />
+      <Stack.Screen name="StudentList" component={StudentList} />
       <Stack.Screen name="Notification" component={Notification} />
-      <Stack.Screen name="Attendance" component={Attendance} />
+      <Stack.Screen name="Course" component={Course} />
     </Stack.Navigator>
   );
 };

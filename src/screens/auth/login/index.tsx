@@ -126,17 +126,7 @@ const Login: FC<LoginProps> = ({ setAuth }) => {
         </View>
         {/* login button container */}
         <View style={styles.buttonContainer}>
-          <_Button
-            title="LOG IN"
-            onPress={() => setAuth(true)}
-            style={{
-              paddingVertical: 20,
-            }}
-            textStyle={{
-              fontFamily: "Visby-Bold",
-              fontSize: 16,
-            }}
-          />
+          <_Button title="LOG IN" onPress={() => setAuth(true)} size="large" />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

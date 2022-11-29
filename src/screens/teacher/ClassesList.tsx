@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import React from "react";
-import { _ClassCard } from "../../components/_ClassCard";
+import _ClassCard from "../../components/_ClassCard";
 
 const ClassesList = () => {
   //get teacher credentails from context api

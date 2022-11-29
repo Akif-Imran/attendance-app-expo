@@ -40,6 +40,25 @@ const globalStyles = StyleSheet.create({
         textAlign: "center",
         color: colors.primary,
     },
+    cardDetailsText: {
+        // paddingHorizontal: 4,
+        // paddingVertical: 2,
+        fontSize: 16,
+        fontFamily: "Visby-Regular",
+        color: colors.xHeavyGray,
+    },
+    cardTitleText: {
+        // paddingHorizontal: 4,
+        // paddingVertical: 2,
+        fontSize: 18,
+        fontFamily: "Visby-Regular",
+        color: colors.lightGray,
+    },
+    cardDescText: {
+        fontSize: 14,
+        fontFamily: 'Visby-Regular',
+        color: colors.xHeavyGray,
+    }
 })
 
 export default globalStyles;
