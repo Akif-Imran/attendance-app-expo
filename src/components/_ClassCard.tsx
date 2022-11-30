@@ -48,12 +48,12 @@ export default _ClassCard;
 const styles = StyleSheet.create({
   mainCardContainer: {
     flexDirection: "row",
+    elevation: 4,
     padding: 10,
-    marginTop: 2,
+    marginTop: 4,
     marginBottom: 4,
     borderRadius: 8,
     overflow: "hidden",
-    elevation: 5,
   },
   mainContainer: {
     flexDirection: "row",

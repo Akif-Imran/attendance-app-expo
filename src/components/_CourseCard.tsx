@@ -24,10 +24,7 @@ const _CourseCard = (props) => {
         navigation.navigate("ClassesList", { course: props.course })
       }
     >
-      <Image
-        source={images[Math.floor(Math.random() * 4)]}
-        style={styles.imageContainer}
-      />
+      <Image source={images[2]} style={styles.imageContainer} />
       <View style={styles.coursesDetailsContainer}>
         <Text style={gStyles.cardDetailsText}>{`${session} | ${course}`}</Text>
         <Text style={gStyles.cardTitleText}>{title}</Text>
@@ -42,7 +39,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     // flex: 1,
     // elevation: 8,
-    marginHorizontal: 4,
+    // marginHorizontal: 4,
     marginVertical: 2,
     overflow: "hidden",
     borderRadius: 8,

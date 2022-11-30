@@ -12,6 +12,7 @@ import {
 } from "../../screens/teacher";
 import { TeacherStackParamsList } from "../../types";
 import { colors } from "../../theme";
+import globalStyles from "../../theme/globalStyles";
 
 const Stack = createStackNavigator<TeacherStackParamsList>();
 
@@ -22,7 +23,15 @@ const TeacherStack: FC<TeacherStackProps> = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTintColor: colors.titleText,
+        headerTintColor: colors.white,
+        headerTitleStyle: {
+          ...globalStyles.cardTitleText,
+          color: colors.white,
+          fontFamily: "Visby-Medium",
+        },
+        headerStyle: {
+          backgroundColor: colors.primary,
+        },
       }}
     >
       <Stack.Screen name="Dashboard" component={Dashboard} />
@@ -40,7 +49,13 @@ const TeacherStack: FC<TeacherStackProps> = () => {
           title: "Classes List",
         }}
       />
-      <Stack.Screen name="StudentList" component={StudentList} />
+      <Stack.Screen
+        name="StudentList"
+        component={StudentList}
+        options={{
+          title: "Student List",
+        }}
+      />
       <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="Course" component={Course} />
     </Stack.Navigator>

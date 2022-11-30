@@ -16,11 +16,13 @@ const CoursesList: React.FC = () => {
     },
     { session: "SPRING-22", course: "FYP-2022S", title: "FINAL YEAR PROJECT" },
   ];
+
   return (
     <View style={styles.mainContainer}>
       <FlatList
         style={styles.cardsContainer}
         data={courseList}
+        contentContainerStyle={styles.listContainerStyle}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <_CourseCard course={item} />}
       />
@@ -36,6 +38,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "white",
     // borderWidth: 1,
+  },
+  listContainerStyle: {
+    paddingHorizontal: 6,
   },
   cardsContainer: {
     // marginHorizontal: 4,

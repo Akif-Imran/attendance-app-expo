@@ -23,6 +23,7 @@ const ClassesList = () => {
     <View style={styles.mainContainer}>
       <FlatList
         data={classesList}
+        contentContainerStyle={styles.listContainerStyle}
         renderItem={({ item }) => <_ClassCard item={item} />}
         showsVerticalScrollIndicator={false}
       />
@@ -36,5 +37,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: "white",
+  },
+  listContainerStyle: {
+    paddingHorizontal: 6,
   },
 });

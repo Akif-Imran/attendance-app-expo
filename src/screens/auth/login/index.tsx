@@ -6,7 +6,7 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 //my imports
-import { colors, gStyles } from "../../../theme";
+import { colors, gStyles, PaperTheme } from "../../../theme";
 import { _Button } from "../../../components/general";
 
 import { styles } from "./styles";
@@ -14,33 +14,13 @@ import { styles } from "./styles";
 interface LoginProps {
   setAuth: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 const Login: FC<LoginProps> = ({ setAuth }) => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [secureEntry, setSecureEntry] = useState<boolean>(true);
   const [icon, setIcon] = useState<string>("eye");
 
-  //refactor complete theme.
-  const textInputTheme = {
-    roundness: 15,
-    fonts: {
-      thin: {
-        fontFamily: "Visby-Regular",
-      },
-      regular: {
-        fontFamily: "Visby-Medium",
-      },
-      medium: {
-        fontFamily: "Visby-Bold",
-      },
-    },
-    colors: {
-      text: colors.qtyTextGray,
-      placeholder: colors.qtyTextGray,
-      primary: colors.primary,
-      notification: colors.secondary,
-    },
-  };
   return (
     //safe are container
     <SafeAreaView style={styles.mainContainer}>
@@ -63,7 +43,7 @@ const Login: FC<LoginProps> = ({ setAuth }) => {
           {/* username field container */}
           <View style={styles.textFieldContainer}>
             <TextInput
-              theme={textInputTheme}
+              theme={PaperTheme}
               mode="outlined"
               label="Username"
               value={username}
@@ -82,7 +62,7 @@ const Login: FC<LoginProps> = ({ setAuth }) => {
           {/* password field container */}
           <View style={styles.textFieldContainer}>
             <TextInput
-              theme={textInputTheme}
+              theme={PaperTheme}
               mode="outlined"
               autoCapitalize="none"
               label="Password"
