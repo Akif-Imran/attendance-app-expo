@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Login } from "../../screens/auth";
 import TeacherStack from "../teacherStack";
 import ParentStack from "../parentStack";
+import StudentStack from "../studentStack";
 import { AuthStackParamsList } from "../../types";
 
 const Stack = createStackNavigator<AuthStackParamsList>();
@@ -17,10 +18,11 @@ const AuthStack = () => {
     >
       {isAuthorized ? (
         <>
-          {/* <Stack.Screen name="TeacherStack">
+          <Stack.Screen name="TeacherStack">
             {(props) => <TeacherStack {...props} setAuth={setIsAuthorized} />}
-          </Stack.Screen> */}
-          <Stack.Screen name="ParentStack" component={ParentStack} />
+          </Stack.Screen>
+          {/* <Stack.Screen name="ParentStack" component={ParentStack} /> */}
+          {/* <Stack.Screen name="ParentStack" component={StudentStack} /> */}
         </>
       ) : (
         <Stack.Screen name="Login">

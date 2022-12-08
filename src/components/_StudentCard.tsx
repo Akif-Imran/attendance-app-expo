@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Switch } from "react-native";
 import React, { useState } from "react";
 import { Card, RadioButton } from "react-native-paper";
 import { colors, gStyles, PaperTheme } from "../theme";
@@ -11,6 +11,9 @@ interface _StudentCard {
 
 const _StudentCard: React.FC<_StudentCard> = ({ student }) => {
   const [value, setValue] = useState("present");
+  const [isPresent, setIsPresent] = useState(false);
+
+  const toggleSwitch = () => setIsPresent((previousState) => !previousState);
   return (
     <Card elevation={4} style={styles.mainContainer}>
       <View style={styles.contentContainer}>
@@ -60,12 +63,35 @@ const _StudentCard: React.FC<_StudentCard> = ({ student }) => {
             </Text>
           </View> */}
 
-          <RadioButton.Group
+          <View style={styles.radioButtonMain}>
+            <View>
+              <Text style={gStyles.cardDetailsText}>
+                {isPresent ? "present" : "absent"}
+              </Text>
+            </View>
+            <View>
+              <Switch
+                trackColor={{ false: colors.error, true: colors.primary }}
+                thumbColor={isPresent ? colors.white : colors.white}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isPresent}
+              />
+            </View>
+          </View>
+          {/* <RadioButton.Group
             onValueChange={(newValue) => setValue(newValue)}
             value={value}
           >
             <View style={styles.radioButtonMain}>
-              <RadioButton.Item
+              <Switch
+                trackColor={{ false: colors.error, true: colors.primary }}
+                thumbColor={isPresent ? colors.white : colors.white}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isPresent}
+              />
+              {/* <RadioButton.Item
                 theme={PaperTheme}
                 label="Present"
                 value="present"
@@ -85,13 +111,13 @@ const _StudentCard: React.FC<_StudentCard> = ({ student }) => {
                 labelStyle={gStyles.cardDetailsText}
                 style={styles.radioItemStyle}
                 position="leading"
-              />
-            </View>
-            {/* <Text style={gStyles.cardDetailsText}>Present</Text> */}
-            {/* <View style={styles.radioContainer}></View>
+              /> */}
+          {/* </View> */}
+          {/* <Text style={gStyles.cardDetailsText}>Present</Text> */}
+          {/* <View style={styles.radioContainer}></View>
             <View style={styles.radioContainer}></View> */}
-            {/* <Text style={gStyles.cardDetailsText}>Absent</Text> */}
-          </RadioButton.Group>
+          {/* <Text style={gStyles.cardDetailsText}>Absent</Text> */}
+          {/* </RadioButton.Group> */}
           {/* <Text style={gStyles.cardDetailsText}>{student.status}</Text> */}
         </View>
       </View>
@@ -168,6 +194,9 @@ const styles = StyleSheet.create({
   },
   radioButtonMain: {
     flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingLeft: 35,
     // borderWidth: 1,
   },
   radioItemStyle: {

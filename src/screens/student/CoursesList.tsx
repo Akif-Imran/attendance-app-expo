@@ -1,6 +1,7 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import _CourseCard from "../../components/_CourseCard";
+import _CourseCard from "./_CourseCard";
+import { ParentStackScreenProps } from "../../types";
 
 const CoursesList: React.FC = () => {
   const courseList = [
@@ -8,15 +9,21 @@ const CoursesList: React.FC = () => {
       session: "SPRING-22",
       course: "CC-2022S",
       title: "COMPILER CONSTRUCTION",
+      percentage: "81",
     },
     {
       session: "SPRING-22",
       course: "MAD-2022S",
       title: "MOBILE APPLICATION DEVELOPMENT",
+      percentage: "94",
     },
-    { session: "SPRING-22", course: "FYP-2022S", title: "FINAL YEAR PROJECT" },
+    {
+      session: "SPRING-22",
+      course: "FYP-2022S",
+      title: "FINAL YEAR PROJECT",
+      percentage: "67",
+    },
   ];
-
   return (
     <View style={styles.mainContainer}>
       <FlatList
@@ -37,6 +44,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     backgroundColor: "white",
+    paddingTop: 15,
     // borderWidth: 1,
   },
   listContainerStyle: {

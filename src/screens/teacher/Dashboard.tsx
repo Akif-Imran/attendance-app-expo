@@ -159,8 +159,19 @@ const Dashboard = () => {
             onPress={() => showDatePicker()}
             mode="contained"
             color={colors.primary}
+            labelStyle={styles.buttonText}
           >
             Select
+          </Button>
+          <Button
+            onPress={() => {
+              setDate(new Date());
+            }}
+            mode="contained"
+            color={colors.primary}
+            labelStyle={styles.buttonText}
+          >
+            Today
           </Button>
         </View>
       </View>
@@ -194,15 +205,23 @@ interface RenderCardProps {
   sessions: Array<SessionType>;
 }
 const RenderCard: React.FC<RenderCardProps> = ({ sessions }) => {
+  const navigation =
+    useNavigation<TeacherStackScreenProps<"Dashboard">["navigation"]>();
   return (
     <>
       {sessions.map((value, index) => (
-        <View
+        <TouchableOpacity
           style={[
             styles.detailsContainer,
             sessions.length === index + 1 ? null : styles.classSeparator,
           ]}
           key={index}
+          onPress={() =>
+            navigation.navigate("StudentList", {
+              class: value.class,
+              course: value.subject,
+            })
+          }
         >
           <View style={styles.classDetails}>
             {/* <View style={styles.icons}>
@@ -234,7 +253,7 @@ const RenderCard: React.FC<RenderCardProps> = ({ sessions }) => {
             <Text style={styles.startTimeText}>{value.start}</Text>
             <Text style={styles.stopTimeText}>{value.stop}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
     </>
   );
@@ -298,7 +317,11 @@ const styles = StyleSheet.create({
   },
   dateInnerContainer: {
     flex: 1,
-    justifyContent: "center",
+    flexDirection: "row",
+    paddingHorizontal: 15,
+    justifyContent: "space-between",
+    // justifyContent: "center",
+    alignItems: "center",
   },
   subjectText: {
     ...globalStyles.cardTitleText,
@@ -306,6 +329,13 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontSize: 16,
     color: colors.titleText,
+  },
+  buttonText: {
+    ...globalStyles.cardTitleText,
+    paddingLeft: 6,
+    lineHeight: 20,
+    fontSize: 14,
+    color: colors.white,
   },
   classVenueText: {
     ...globalStyles.cardDetailsText,

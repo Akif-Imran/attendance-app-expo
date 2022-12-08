@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import React from "react";
-import { _StudentCard } from "../../components";
+import _ChildCard from "./_ChildCard";
 import { _Button } from "../../components/general";
 import { Button } from "react-native-paper";
 import { colors } from "../../theme";
@@ -9,63 +9,21 @@ import globalStyles from "../../theme/globalStyles";
 const students = [
   {
     regNo: "19-ARID-0069",
-    firstName: "Akif",
-    lastName: "Imran",
-    status: "absent",
-  },
-  {
-    regNo: "19-ARID-0070",
-    firstName: "Adeel",
-    lastName: "Anjum",
-    status: "absent",
-  },
-  {
-    regNo: "19-ARID-0071",
-    firstName: "Ali",
-    lastName: "Ahmed",
-    status: "absent",
-  },
-  {
-    regNo: "19-ARID-0072",
-    firstName: "Abdullah",
-    lastName: "Amir",
-    status: "absent",
-  },
-  {
-    regNo: "19-ARID-0073",
-    firstName: "Hamza",
-    lastName: "Mustafa",
-    status: "absent",
-  },
-  {
-    regNo: "19-ARID-0074",
-    firstName: "Umer",
-    lastName: "Niaz",
-    status: "absent",
-  },
-  {
-    regNo: "19-ARID-0075",
-    firstName: "Hamza",
-    lastName: "Shabbir",
-    status: "absent",
-  },
-  {
-    regNo: "19-ARID-0076",
-    firstName: "Usman",
-    lastName: "Khan",
-    status: "absent",
-  },
-  {
-    regNo: "19-ARID-0077",
-    firstName: "Abdul",
-    lastName: "Rakeeb",
-    status: "absent",
-  },
-  {
-    regNo: "19-ARID-0186",
     firstName: "Ahsan",
     lastName: "Ali",
-    status: "absent",
+    class: "BSCS-7A",
+  },
+  {
+    regNo: "19-ARID-0082",
+    firstName: "Adeel",
+    lastName: "Ali",
+    class: "BSCS-7B",
+  },
+  {
+    regNo: "19-ARID-0099",
+    firstName: "Mira",
+    lastName: "Ali",
+    class: "BSCS-7A",
   },
 ];
 const StudentList = () => {
@@ -76,7 +34,7 @@ const StudentList = () => {
           data={students}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContentContainer}
-          renderItem={({ item, index }) => <_StudentCard student={item} />}
+          renderItem={({ item, index }) => <_ChildCard student={item} />}
           keyExtractor={(_, index) => index.toString()}
         />
       </View>

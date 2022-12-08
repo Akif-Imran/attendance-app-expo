@@ -14,7 +14,10 @@ export type TeacherStackParamsList = {
     Course: undefined;
     Notification: undefined;
     // Attendance: undefined;
-    StudentList: undefined;
+    StudentList: {
+        class: string;
+        course: string;
+    };
 }
 export type ParentStackParamsList = {
     Dashboard: undefined;
@@ -25,7 +28,15 @@ export type ParentStackParamsList = {
         courseName: string;
     };
 }
+
+export type StudentStackParamsList = {
+    Dashboard: undefined;
+    LectureList: {
+        courseName: string;
+    };
+}
 //teacher screens
 type CoursesListProps = StackScreenProps<TeacherStackParamsList, 'CoursesList'>;
 export type TeacherStackScreenProps<T extends keyof TeacherStackParamsList> = StackScreenProps<TeacherStackParamsList, T>;
 export type ParentStackScreenProps<T extends keyof ParentStackParamsList> = StackScreenProps<ParentStackParamsList, T>;
+export type StudentStackScreenProps<T extends keyof StudentStackParamsList> = StackScreenProps<StudentStackParamsList, T>;
