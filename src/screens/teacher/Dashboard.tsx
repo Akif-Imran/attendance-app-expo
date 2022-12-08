@@ -4,13 +4,15 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  Platform,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { TeacherStackScreenProps } from "../../types";
-import { Card } from "react-native-paper";
+import { Button, Card } from "react-native-paper";
 import globalStyles from "../../theme/globalStyles";
 import { colors } from "../../theme";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 // import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 // import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -23,17 +25,21 @@ interface SessionType {
 }
 const timetable = [
   {
+    day: "Sunday",
+    sessions: [],
+  },
+  {
     day: "Monday",
     sessions: [
       {
-        subject: "Mathematics",
+        subject: "COAL",
         class: "BSCS-6A",
         venue: "LT-11",
         start: "8:00 AM",
         stop: "8:30 AM",
       },
       {
-        subject: "Science",
+        subject: "PF",
         class: "BSCS-7A",
         venue: "LT-11",
         start: "8:35 AM",
@@ -45,14 +51,14 @@ const timetable = [
     day: "Tuesday",
     sessions: [
       {
-        subject: "English",
+        subject: "COAL",
         class: "BSCS-6A",
         venue: "LT-11",
         start: "8:00 AM",
         stop: "8:30 AM",
       },
       {
-        subject: "Science",
+        subject: "PF",
         class: "BSCS-7A",
         venue: "LT-11",
         start: "8:35 AM",
@@ -64,7 +70,7 @@ const timetable = [
     day: "Wednesday",
     sessions: [
       {
-        subject: "English",
+        subject: "MAP",
         class: "BSCS-6A",
         venue: "LT-11",
         start: "8:00 AM",
@@ -80,14 +86,14 @@ const timetable = [
     day: "Friday",
     sessions: [
       {
-        subject: "Mathematics",
+        subject: "COAL",
         class: "BSCS-6A",
         venue: "LT-11",
         start: "8:00 AM",
         stop: "8:30 AM",
       },
       {
-        subject: "Science",
+        subject: "PF",
         class: "BSCS-7A",
         venue: "LT-11",
         start: "8:35 AM",
@@ -95,10 +101,43 @@ const timetable = [
       },
     ],
   },
+  {
+    day: "Saturday",
+    sessions: [],
+  },
 ];
+
 const Dashboard = () => {
   const navigation =
     useNavigation<TeacherStackScreenProps<"Dashboard">["navigation"]>();
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode: string) => {
+    if (Platform.OS === "android") {
+      setShow(false);
+      // for iOS, add a button that closes the picker
+    }
+    setMode(currentMode);
+  };
+
+  const showDatePicker = () => {
+    DateTimePickerAndroid.open({
+      value: date,
+      onChange,
+      mode: "date",
+      display: "spinner",
+      is24Hour: true,
+    });
+  };
+
   return (
     <View style={styles.mainContainer}>
       <TouchableOpacity
@@ -110,8 +149,23 @@ const Dashboard = () => {
       >
         <Text>Courses</Text>
       </TouchableOpacity>
+
+      <View style={styles.dateContainer}>
+        <View style={styles.dateInnerContainer}>
+          <Text style={styles.subjectText}>{date.toDateString()}</Text>
+        </View>
+        <View style={styles.dateInnerContainer}>
+          <Button
+            onPress={() => showDatePicker()}
+            mode="contained"
+            color={colors.primary}
+          >
+            Select
+          </Button>
+        </View>
+      </View>
       <FlatList
-        data={timetable}
+        data={[timetable[date.getDay()]]}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.timetableListContentContainer}
         renderItem={({ item, index }) => (
@@ -237,6 +291,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 15,
   },
+  dateContainer: {
+    flexDirection: "row",
+    paddingTop: 15,
+    paddingHorizontal: 4,
+  },
+  dateInnerContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
   subjectText: {
     ...globalStyles.cardTitleText,
     paddingLeft: 6,
@@ -259,34 +322,35 @@ const styles = StyleSheet.create({
   },
   startTimeText: {
     ...globalStyles.descText,
-    elevation: 6,
+    // elevation: 6,
     flex: 1,
-    backgroundColor: colors.primary,
-    color: colors.white,
+    // backgroundColor: colors.primary,
+    // color: colors.white,
+    fontFamily: "Visby-Medium",
     textAlign: "center",
     textAlignVertical: "center",
     paddingHorizontal: 10,
-    fontFamily: "Visby-Bold",
     fontSize: 14,
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
-    // borderWidth: 1,
+    borderColor: colors.borderColor,
+    borderWidth: 1,
   },
   stopTimeText: {
     ...globalStyles.descText,
-    elevation: 6,
+    // elevation: 6,
     flex: 1,
-    backgroundColor: colors.primary,
-    color: colors.white,
+    // backgroundColor: colors.primary,
+    // color: colors.white,
+    fontFamily: "Visby-Medium",
     textAlign: "center",
     textAlignVertical: "center",
     paddingHorizontal: 10,
-    fontFamily: "Visby-Bold",
     fontSize: 14,
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,
     borderLeftWidth: 1,
-    borderColor: colors.white,
-    // borderWidth: 1,
+    borderColor: colors.borderColor,
+    borderWidth: 1,
   },
 });
