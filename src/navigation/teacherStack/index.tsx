@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { FC, Dispatch } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { FC, Dispatch, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
   Attendance,
@@ -16,6 +16,8 @@ import globalStyles from "../../theme/globalStyles";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import * as ImagePicker from "expo-image-picker";
+import { Camera, CameraType } from "expo-camera";
 
 const Stack = createStackNavigator<TeacherStackParamsList>();
 
@@ -23,6 +25,21 @@ interface TeacherStackProps {
   setAuth: Dispatch<React.SetStateAction<boolean>>;
 }
 const TeacherStack: FC<TeacherStackProps> = () => {
+  const [image, setImage] = useState(null);
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.assets[0].uri);
+    }
+  };
   return (
     <Stack.Navigator
       screenOptions={{
@@ -32,6 +49,7 @@ const TeacherStack: FC<TeacherStackProps> = () => {
           color: colors.white,
           fontFamily: "Visby-Medium",
         },
+        headerShown: false,
         headerStyle: {
           backgroundColor: colors.primary,
         },
@@ -59,9 +77,12 @@ const TeacherStack: FC<TeacherStackProps> = () => {
           title: `${route.params.class}-${route.params.course}`,
           headerRight: () => (
             <>
-              <View style={styles.iconContainer}>
+              <TouchableOpacity
+                style={styles.iconContainer}
+                onPress={pickImage}
+              >
                 <Ionicons name="image" color={colors.white} size={23} />
-              </View>
+              </TouchableOpacity>
               <View style={styles.iconContainer}>
                 <FontAwesome5 name="camera" size={20} color={colors.white} />
               </View>

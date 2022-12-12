@@ -28,10 +28,7 @@ const _ChildCard: React.FC<_ChildCard> = ({ student }) => {
     >
       <View style={styles.contentContainer}>
         <View style={styles.imageContainer}>
-          <Image
-            source={require("../../assets/images/jpg/abstract-bg-1.jpg")}
-            style={styles.imageStyle}
-          />
+          <Image source={student.img} style={styles.imageStyle} />
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.iconWithTextContainer}>

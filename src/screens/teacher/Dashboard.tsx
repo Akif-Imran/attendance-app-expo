@@ -13,8 +13,6 @@ import { Button, Card } from "react-native-paper";
 import globalStyles from "../../theme/globalStyles";
 import { colors } from "../../theme";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-// import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-// import Ionicons from "@expo/vector-icons/Ionicons";
 
 interface SessionType {
   subject: string;
@@ -140,7 +138,7 @@ const Dashboard = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => navigation.navigate("CoursesList")}
         style={{
           padding: 10,
@@ -148,7 +146,7 @@ const Dashboard = () => {
         }}
       >
         <Text>Courses</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <View style={styles.dateContainer}>
         <View style={styles.dateInnerContainer}>

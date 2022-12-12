@@ -12,19 +12,21 @@ const students = [
     firstName: "Ahsan",
     lastName: "Ali",
     class: "BSCS-7A",
+    img: require("../../assets/images/ImagesAttendance/Ahsan-Ali.jpg"),
   },
   {
     regNo: "19-ARID-0082",
     firstName: "Adeel",
     lastName: "Ali",
     class: "BSCS-7B",
+    img: require("../../assets/images/ImagesAttendance/Adeel-Anjum.jpg"),
   },
-  {
-    regNo: "19-ARID-0099",
-    firstName: "Mira",
-    lastName: "Ali",
-    class: "BSCS-7A",
-  },
+  // {
+  //   regNo: "19-ARID-0099",
+  //   firstName: "Mira",
+  //   lastName: "Ali",
+  //   class: "BSCS-7A",
+  // },
 ];
 const StudentList = () => {
   return (

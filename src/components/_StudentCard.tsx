@@ -9,7 +9,16 @@ interface _StudentCard {
   student: any;
 }
 
-const _StudentCard: React.FC<_StudentCard> = ({ student }) => {
+const _StudentCard: React.FC<_StudentCard> = ({
+  student,
+}: {
+  student: {
+    regNo: string;
+    firstName: string;
+    lastName: string;
+    status: string;
+  };
+}) => {
   const [value, setValue] = useState("present");
   const [isPresent, setIsPresent] = useState(false);
 
@@ -18,10 +27,7 @@ const _StudentCard: React.FC<_StudentCard> = ({ student }) => {
     <Card elevation={4} style={styles.mainContainer}>
       <View style={styles.contentContainer}>
         <View style={styles.imageContainer}>
-          <Image
-            source={require("../assets/images/jpg/abstract-bg-1.jpg")}
-            style={styles.imageStyle}
-          />
+          <Image source={student.img} style={styles.imageStyle} />
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.iconWithTextContainer}>
@@ -141,8 +147,8 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
   },
   imageContainer: {
-    // borderRadius: 50,
     overflow: "hidden",
+    // borderRadius: 50,
   },
   cardDetailsText: {
     ...globalStyles.cardDetailsText,
@@ -186,10 +192,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    // paddingHorizontal: 6,
-    // paddingVertical: 6,
     paddingRight: 6,
     borderRadius: 15,
+    // paddingHorizontal: 6,
+    // paddingVertical: 6,
     // borderWidth: 1,
   },
   radioButtonMain: {

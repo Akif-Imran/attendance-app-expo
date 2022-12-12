@@ -26,13 +26,13 @@ const _ClassCard = ({ item }) => {
             {item.conductedClasses} classes conducted.
           </Text>
           <View style={styles.buttonContainer}>
-            <View style={styles.individualButtonContainer}>
+            {/* <View style={styles.individualButtonContainer}>
               <_Button
                 title="Mark"
                 onPress={() => navigation.navigate("StudentList")}
                 size="small"
               />
-            </View>
+            </View> */}
             <View style={styles.individualButtonContainer}>
               <_Button title="Update" onPress={() => {}} size="small" />
             </View>

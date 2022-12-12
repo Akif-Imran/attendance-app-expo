@@ -1,6 +1,6 @@
 import type { StackScreenProps } from "@react-navigation/stack";
 export type AuthStackParamsList = {
-    TeacherStack: undefined;
+    TeacherDrawer: undefined;
     ParentStack: undefined;
     Login: undefined;
 }
