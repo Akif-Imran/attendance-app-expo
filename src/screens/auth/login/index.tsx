@@ -1,4 +1,10 @@
-import { Text, View, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ToastAndroid,
+} from "react-native";
 import React, { useState, FC } from "react";
 import Fontisto from "@expo/vector-icons/Fontisto";
 
@@ -10,17 +16,37 @@ import { colors, gStyles, PaperTheme } from "../../../theme";
 import { _Button } from "../../../components/general";
 
 import { styles } from "./styles";
+import { useUserContext } from "../../../contexts";
+import { api } from "../../../helpers";
+import { ApiUserType } from "../../../types";
 
-interface LoginProps {
-  setAuth: React.Dispatch<React.SetStateAction<boolean>>;
-}
+interface LoginProps {}
 
-const Login: FC<LoginProps> = ({ setAuth }) => {
+const Login: FC<LoginProps> = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [secureEntry, setSecureEntry] = useState<boolean>(true);
   const [icon, setIcon] = useState<string>("eye");
+  const { setUser, setIsAuthorized } = useUserContext();
 
+  const handleLogin = async () => {
+    const response = await api.post("/login/authenticate-user", {
+      username,
+      password,
+    });
+    if (response.status === 200) {
+      const data: ApiUserType = response.data;
+      console.log(data);
+      setIsAuthorized(true);
+      setUser(data);
+    } else {
+      ToastAndroid.showWithGravity(
+        "Invalid username or password",
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM
+      );
+    }
+  };
   return (
     //safe are container
     <SafeAreaView style={styles.mainContainer}>
@@ -106,7 +132,7 @@ const Login: FC<LoginProps> = ({ setAuth }) => {
         </View>
         {/* login button container */}
         <View style={styles.buttonContainer}>
-          <_Button title="LOG IN" onPress={() => setAuth(true)} size="large" />
+          <_Button title="LOG IN" onPress={handleLogin} size="large" />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

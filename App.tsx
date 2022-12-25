@@ -18,6 +18,7 @@ import {
 
 import MainApp from "./src";
 import { ImagesProvider } from "./src/contexts";
+import { AuthProvider } from "./src/contexts";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -64,7 +65,9 @@ export default function App() {
           >
             <Provider>
               <ImagesProvider>
-                <MainApp />
+                <AuthProvider>
+                  <MainApp />
+                </AuthProvider>
               </ImagesProvider>
             </Provider>
           </NavigationContainer>
@@ -75,3 +78,4 @@ export default function App() {
 }
 
 registerRootComponent(App);
+
