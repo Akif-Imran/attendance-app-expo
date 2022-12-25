@@ -22,9 +22,9 @@ const AuthStack = () => {
           {/* <Stack.Screen name="TeacherStack">
             {(props) => <TeacherStack {...props} setAuth={setIsAuthorized} />}
           </Stack.Screen> */}
-          {/* <Stack.Screen name="TeacherDrawer" component={TeacherDrawer} /> */}
+          <Stack.Screen name="TeacherDrawer" component={TeacherDrawer} />
           {/* <Stack.Screen name="ParentStack" component={ParentStack} /> */}
-          <Stack.Screen name="ParentStack" component={StudentStack} />
+          {/* <Stack.Screen name="ParentStack" component={StudentStack} /> */}
         </>
       ) : (
         <Stack.Screen name="Login">

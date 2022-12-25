@@ -17,6 +17,7 @@ import {
 } from "@react-navigation/native";
 
 import MainApp from "./src";
+import { ImagesProvider } from "./src/contexts";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -62,7 +63,9 @@ export default function App() {
             theme={scheme === "dark" ? DarkTheme : DefaultTheme}
           >
             <Provider>
-              <MainApp />
+              <ImagesProvider>
+                <MainApp />
+              </ImagesProvider>
             </Provider>
           </NavigationContainer>
         </View>

@@ -10,18 +10,21 @@ const CoursesList: React.FC = () => {
       course: "CC-2022S",
       title: "COMPILER CONSTRUCTION",
       percentage: "81",
+      last: "present",
     },
     {
       session: "SPRING-22",
       course: "MAD-2022S",
       title: "MOBILE APPLICATION DEVELOPMENT",
       percentage: "94",
+      last: "present",
     },
     {
       session: "SPRING-22",
       course: "FYP-2022S",
       title: "FINAL YEAR PROJECT",
       percentage: "67",
+      last: "absent",
     },
   ];
   return (

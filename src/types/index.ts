@@ -12,6 +12,7 @@ export type TeacherStackParamsList = {
         course: any;
     } | undefined;
     Course: undefined;
+    ImageViewer: undefined;
     Notification: undefined;
     // Attendance: undefined;
     StudentList: {

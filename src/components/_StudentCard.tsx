@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View, Image, Switch } from "react-native";
 import React, { useState } from "react";
-import { Card, RadioButton } from "react-native-paper";
+import { Card, RadioButton, ToggleButton } from "react-native-paper";
 import { colors, gStyles, PaperTheme } from "../theme";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import globalStyles from "../theme/globalStyles";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface _StudentCard {
   student: any;
@@ -20,9 +21,9 @@ const _StudentCard: React.FC<_StudentCard> = ({
   };
 }) => {
   const [value, setValue] = useState("present");
-  const [isPresent, setIsPresent] = useState(false);
+  const [isPresent, setIsPresent] = useState<boolean>(false);
 
-  const toggleSwitch = () => setIsPresent((previousState) => !previousState);
+  const toggleStatus = () => setIsPresent((previousState) => !previousState);
   return (
     <Card elevation={4} style={styles.mainContainer}>
       <View style={styles.contentContainer}>
@@ -30,6 +31,7 @@ const _StudentCard: React.FC<_StudentCard> = ({
           <Image source={student.img} style={styles.imageStyle} />
         </View>
         <View style={styles.detailsContainer}>
+          {/* student details container */}
           <View style={styles.iconWithTextContainer}>
             {/* icons container */}
             <View style={styles.iconContainer}>
@@ -46,85 +48,28 @@ const _StudentCard: React.FC<_StudentCard> = ({
             </View>
             {/* text container */}
             <View style={styles.studentDetailsTextContainer}>
-              <Text style={styles.cardDetailsText}>
-                {/* <Text style={gStyles.cardTitleText}>Reg No.</Text> */}
-                {student.regNo}
-              </Text>
+              <Text style={styles.cardDetailsText}>{student.regNo}</Text>
               <Text style={styles.cardDetailsText}>
                 {student.firstName} {student.lastName}
               </Text>
             </View>
           </View>
-
-          {/* <View style={styles.iconWithTextContainer}>
-            <FontAwesome name="id-card" size={20} color={colors.iconColor} />
-            <Text style={gStyles.cardDetailsText}>
-              {student.regNo}
-            </Text>
-          </View>
-          <View style={styles.iconWithTextContainer}>
-            <FontAwesome name="user" size={20} color={colors.iconColor} />
-            <Text style={gStyles.cardDetailsText}>
-              {student.firstName} {student.lastName}
-            </Text>
-          </View> */}
-
-          <View style={styles.radioButtonMain}>
-            <View>
-              <Text style={gStyles.cardDetailsText}>
+          {/* status container */}
+          <View style={styles.statusContainer}>
+            <TouchableOpacity
+              style={[
+                styles.toggleButton,
+                isPresent
+                  ? styles.toggleButtonPositive
+                  : styles.toggleButtonNegative,
+              ]}
+              onPress={toggleStatus}
+            >
+              <Text style={styles.attendanceStatusText}>
                 {isPresent ? "present" : "absent"}
               </Text>
-            </View>
-            <View>
-              <Switch
-                trackColor={{ false: colors.error, true: colors.primary }}
-                thumbColor={isPresent ? colors.white : colors.white}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={isPresent}
-              />
-            </View>
+            </TouchableOpacity>
           </View>
-          {/* <RadioButton.Group
-            onValueChange={(newValue) => setValue(newValue)}
-            value={value}
-          >
-            <View style={styles.radioButtonMain}>
-              <Switch
-                trackColor={{ false: colors.error, true: colors.primary }}
-                thumbColor={isPresent ? colors.white : colors.white}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={isPresent}
-              />
-              {/* <RadioButton.Item
-                theme={PaperTheme}
-                label="Present"
-                value="present"
-                color={colors.primary}
-                uncheckedColor={colors.iconGray}
-                labelStyle={gStyles.cardDetailsText}
-                style={[styles.radioItemStyle, { marginLeft: -18 }]}
-                position="leading"
-              />
-
-              <RadioButton.Item
-                theme={PaperTheme}
-                label="Absent"
-                value="absent"
-                color={colors.error}
-                uncheckedColor={colors.iconGray}
-                labelStyle={gStyles.cardDetailsText}
-                style={styles.radioItemStyle}
-                position="leading"
-              /> */}
-          {/* </View> */}
-          {/* <Text style={gStyles.cardDetailsText}>Present</Text> */}
-          {/* <View style={styles.radioContainer}></View>
-            <View style={styles.radioContainer}></View> */}
-          {/* <Text style={gStyles.cardDetailsText}>Absent</Text> */}
-          {/* </RadioButton.Group> */}
-          {/* <Text style={gStyles.cardDetailsText}>{student.status}</Text> */}
         </View>
       </View>
     </Card>
@@ -138,6 +83,26 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     marginVertical: 2,
+    // borderWidth: 1,
+  },
+  toggleButton: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    // borderWidth: 1,
+  },
+  toggleButtonPositive: {
+    backgroundColor: colors.primary,
+  },
+  toggleButtonNegative: {
+    backgroundColor: colors.error,
+  },
+  attendanceStatusText: {
+    // ...gStyles.cardDetailsText,
+    ...gStyles.descText,
+    color: colors.white,
+    textAlign: "center",
+    textAlignVertical: "center",
     // borderWidth: 1,
   },
   imageStyle: {
@@ -166,7 +131,7 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     paddingLeft: 10,
     // borderWidth: 1,
   },
@@ -198,11 +163,11 @@ const styles = StyleSheet.create({
     // paddingVertical: 6,
     // borderWidth: 1,
   },
-  radioButtonMain: {
+  statusContainer: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "flex-end",
     alignItems: "center",
-    paddingLeft: 35,
+    // paddingLeft: 35,
     // borderWidth: 1,
   },
   radioItemStyle: {

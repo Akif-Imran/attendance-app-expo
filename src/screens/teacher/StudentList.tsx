@@ -1,86 +1,170 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, FlatList, ToastAndroid } from "react-native";
+import React, { useState } from "react";
 import { _StudentCard } from "../../components";
 import { _Button } from "../../components/general";
-import { Button } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import { colors } from "../../theme";
 import globalStyles from "../../theme/globalStyles";
+import * as ImagePicker from "expo-image-picker";
+import { useImagesContext } from "../../contexts";
+import { useNavigation } from "@react-navigation/native";
 
 const students = [
   {
-    regNo: "19-ARID-0069",
+    regNo: "2019-ARID-0069",
     firstName: "Ikrama",
     lastName: "Arif",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Ikrama-Arif.jpg"),
   },
   {
-    regNo: "19-ARID-0070",
+    regNo: "2019-ARID-0070",
     firstName: "Adeel",
     lastName: "Anjum",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Adeel-Anjum.jpg"),
   },
   {
-    regNo: "19-ARID-0071",
+    regNo: "2019-ARID-0071",
     firstName: "Ali",
     lastName: "Ahmed",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Ali-Ahmed.jpg"),
   },
   {
-    regNo: "19-ARID-0072",
+    regNo: "2019-ARID-0072",
     firstName: "Ahmed",
     lastName: "Faizan",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Ahmed-Faizan.jpg"),
   },
   {
-    regNo: "19-ARID-0073",
+    regNo: "2019-ARID-0073",
     firstName: "Raja",
     lastName: "Hamza",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Raja-Hamza.jpg"),
   },
   {
-    regNo: "19-ARID-0074",
+    regNo: "2019-ARID-0074",
     firstName: "Amir",
     lastName: "Nawaz",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Amir-Nawaz.jpg"),
   },
   {
-    regNo: "19-ARID-0075",
+    regNo: "2019-ARID-0075",
     firstName: "Hamza",
     lastName: "Shabbir",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Hamza-Shabbir.jpg"),
   },
   {
-    regNo: "19-ARID-0076",
+    regNo: "2019-ARID-0076",
     firstName: "Usman",
     lastName: "Khan",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Usman-Khan.jpg"),
   },
   {
-    regNo: "19-ARID-0077",
+    regNo: "2019-ARID-0077",
     firstName: "Abdul",
     lastName: "Rakeeb",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Abdul-Rakeeb.jpg"),
   },
   {
-    regNo: "19-ARID-0186",
+    regNo: "2019-ARID-0186",
     firstName: "Ahsan",
     lastName: "Ali",
     status: "absent",
     img: require("../../assets/images/ImagesAttendance/Ahsan-Ali.jpg"),
   },
 ];
+
 const StudentList = () => {
+  const navigation = useNavigation();
+  const { images, setImages } = useImagesContext();
+  const [visible, setIsVisible] = useState(false);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        allowsMultipleSelection: true,
+        // aspect: [4, 3],
+        quality: 1,
+      });
+      console.log(result);
+      if (!result.cancelled) {
+        if ("selected" in result) {
+          setImages(result.selected);
+          ToastAndroid.show(
+            "Make sure all Images are selected!",
+            ToastAndroid.SHORT
+          );
+        } else {
+          setImages([result]);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const captureImage = async () => {
+    try {
+      // const permission = await ImagePicker.requestCameraPermissionsAsync();
+      // if (permission.granted === false) return;
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        allowsMultipleSelection: true,
+        quality: 1,
+      });
+      console.log(result);
+      // if (!result.cancelled) {
+      //   if ("selected" in result) {
+      //     setImages(result.selected);
+      //     ToastAndroid.show(
+      //       "Make sure all Images are selected!",
+      //       ToastAndroid.SHORT
+      //     );
+      //   } else {
+      //     setImages([result]);
+      //   }
+      // }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <View style={styles.mainContainer}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <IconButton
+          onPress={() => {
+            navigation.navigate("ImageViewer");
+          }}
+          color={colors.primary}
+          icon="animation"
+        />
+        <IconButton onPress={pickImage} color={colors.primary} icon="image" />
+        <IconButton
+          onPress={captureImage}
+          color={colors.primary}
+          icon="camera"
+        />
+        <IconButton onPress={pickImage} color={colors.primary} icon="send" />
+      </View>
       <View style={styles.cardsContainer}>
         <FlatList
           data={students}

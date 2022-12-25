@@ -8,7 +8,7 @@ import { colors, gStyles } from "../../theme";
 const _CourseCard = (props) => {
   const navigation =
     useNavigation<ParentStackScreenProps<"CoursesList">["navigation"]>();
-  const { session, course, title, percentage } = props.course;
+  const { session, course, title, percentage, last } = props.course;
 
   const getColor = (percentage: string) => {
     const percent = parseInt(percentage);
@@ -32,7 +32,16 @@ const _CourseCard = (props) => {
             {percentage}%
           </Text>
         </View>
-        <Text style={gStyles.cardTitleText}>{title}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+          }}
+        >
+          <Text style={gStyles.cardTitleText}>{title}</Text>
+          <Text style={gStyles.cardDetailsText}>Last Class: {last}</Text>
+        </View>
       </View>
     </Card>
   );
@@ -63,6 +72,7 @@ const styles = StyleSheet.create({
   },
   coursesDetailsContainer: {
     padding: 12,
+    // borderWidth: 1,
   },
   courseTitleText: {
     paddingHorizontal: 4,

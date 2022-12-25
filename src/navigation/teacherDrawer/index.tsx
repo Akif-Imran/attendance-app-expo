@@ -53,6 +53,7 @@ const TeacherDrawer: FC<TeacherStackProps> = () => {
               color={focused ? colors.white : colors.iconGray}
             />
           ),
+          headerShown: false,
         }}
       />
       <Drawer.Screen
@@ -69,7 +70,7 @@ const TeacherDrawer: FC<TeacherStackProps> = () => {
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Courses"
         component={CoursesList}
         options={{
@@ -82,7 +83,7 @@ const TeacherDrawer: FC<TeacherStackProps> = () => {
             />
           ),
         }}
-      />
+      /> */}
       <Drawer.Screen
         name="Attendance"
         component={ClassesList}
