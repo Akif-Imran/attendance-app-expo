@@ -30,21 +30,25 @@ const Login: FC<LoginProps> = () => {
   const { setUser, setIsAuthorized } = useUserContext();
 
   const handleLogin = async () => {
-    const response = await api.post("/login/authenticate-user", {
-      username,
-      password,
-    });
-    if (response.status === 200) {
-      const data: ApiUserType = response.data;
-      console.log(data);
-      setIsAuthorized(true);
-      setUser(data);
-    } else {
-      ToastAndroid.showWithGravity(
-        "Invalid username or password",
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM
-      );
+    try {
+      console.log("login triggered");
+      const response = await api.post("/login/authenticate-user", {
+        username,
+        password,
+      });
+      if (response.status === 200) {
+        const data: ApiUserType = response.data;
+        console.log(data);
+        if (data.userType) {
+          setIsAuthorized(true);
+          setUser(data);
+        } else {
+          ToastAndroid.show("Invalid username or password", ToastAndroid.LONG);
+          return;
+        }
+      }
+    } catch (e) {
+      ToastAndroid.show("Invalid username or password", ToastAndroid.LONG);
     }
   };
   return (

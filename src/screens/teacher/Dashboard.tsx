@@ -6,13 +6,19 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { TeacherStackScreenProps } from "../../types";
+import {
+  ApiTeacherTimetable,
+  ApiTimetableSessionByDay,
+  TeacherStackScreenProps,
+} from "../../types";
 import { Button, Card } from "react-native-paper";
 import globalStyles from "../../theme/globalStyles";
 import { colors } from "../../theme";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import { api } from "../../helpers";
+import { useUserContext } from "../../contexts";
 
 interface SessionType {
   subject: string;
@@ -111,19 +117,31 @@ const Dashboard = () => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  const [ApiTimetable, setApiTimetable] =
+    useState<Array<ApiTimetableSessionByDay>>();
+  const { user } = useUserContext();
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchTimetables = async () => {
+      const response = await api.get(
+        `/teacher/get-teacher-timetable/${user.id}`
+      );
+      if (response.status === 200) {
+        const apiData: Array<ApiTimetableSessionByDay> = response.data;
+        console.log(apiData);
+        setApiTimetable(apiData);
+      }
+    };
+    fetchTimetables().catch((error) =>
+      console.error("Teacher-Dashboard: Timetable")
+    );
+  }, [user]);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
-  };
-
-  const showMode = (currentMode: string) => {
-    if (Platform.OS === "android") {
-      setShow(false);
-      // for iOS, add a button that closes the picker
-    }
-    setMode(currentMode);
   };
 
   const showDatePicker = () => {
@@ -173,28 +191,30 @@ const Dashboard = () => {
           </Button>
         </View>
       </View>
-      <FlatList
-        data={[timetable[date.getDay()]]}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.timetableListContentContainer}
-        renderItem={({ item, index }) => (
-          <View>
-            <Text style={styles.dayText}>{item.day}</Text>
+      {ApiTimetable ? (
+        <FlatList
+          data={[ApiTimetable[date.getDay()]]}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.timetableListContentContainer}
+          renderItem={({ item, index }) => (
             <View>
-              <Card key={index} style={styles.cardStyle}>
-                {item.sessions.length === 0 ? (
-                  <View style={[styles.detailsContainer, styles.noClasses]}>
-                    <Text style={styles.subjectText}>No Classes</Text>
-                  </View>
-                ) : (
-                  <RenderCard sessions={item.sessions} />
-                )}
-              </Card>
+              <Text style={styles.dayText}>{item.day}</Text>
+              <View>
+                <Card key={index} style={styles.cardStyle}>
+                  {item.sessions.length === 0 ? (
+                    <View style={[styles.detailsContainer, styles.noClasses]}>
+                      <Text style={styles.subjectText}>No Classes</Text>
+                    </View>
+                  ) : (
+                    <RenderCard sessions={item.sessions} />
+                  )}
+                </Card>
+              </View>
             </View>
-          </View>
-        )}
-        keyExtractor={(_, index) => index.toString()}
-      />
+          )}
+          keyExtractor={(_, index) => index.toString()}
+        />
+      ) : null}
     </View>
   );
 };
@@ -382,3 +402,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+

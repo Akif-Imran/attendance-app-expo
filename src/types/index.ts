@@ -2,6 +2,7 @@ import type { StackScreenProps } from "@react-navigation/stack";
 export type AuthStackParamsList = {
     TeacherDrawer: undefined;
     ParentStack: undefined;
+    StudentStack: undefined;
     Login: undefined;
 }
 //teacherStacks
@@ -49,6 +50,23 @@ export type ApiUserType = {
     firstName: string;
     lastName: string;
 }
+
+export type ApiTimetableSessionByDay = {
+    day: string;
+    weekDay: number;
+    sessions: Array<ApiTimetableSession | []>
+}
+
+export type ApiTimetableSession = {
+    subject: string;
+    class: string;
+    venue: string;
+    start: string;
+    stop: string;
+    slot: number;
+}
+
+
 export type UserContextType = {
     user: ApiUserType | undefined;
     setUser: React.Dispatch<React.SetStateAction<ApiUserType | undefined>>;
