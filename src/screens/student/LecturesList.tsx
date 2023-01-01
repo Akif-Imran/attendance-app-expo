@@ -8,54 +8,21 @@ import {
 } from "react-native";
 import React from "react";
 import { Card } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
-import { ParentStackScreenProps, TeacherStackScreenProps } from "../../types";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  ParentStackScreenProps,
+  StudentStackScreenProps,
+  StudentViewAttendanceObject,
+  TeacherStackScreenProps,
+} from "../../types";
 import { colors, gStyles } from "../../theme";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
-const LecturesList = () => {
-  const data = [
-    {
-      date: new Date(2022, 10, 25, 8, 41),
-      status: "present",
-    },
-    {
-      date: new Date(2022, 10, 28, 8, 33),
-      status: "absent",
-    },
-    {
-      date: new Date(2022, 10, 29, 8, 35),
-      status: "present",
-    },
-    {
-      date: new Date(2022, 10, 30, 8, 34),
-      status: "absent",
-    },
-    {
-      date: new Date(2022, 11, 1, 8, 34),
-      status: "present",
-    },
-    {
-      date: new Date(2022, 11, 2, 8, 37),
-      status: "absent",
-    },
-    {
-      date: new Date(2022, 11, 5, 8, 32),
-      status: "present",
-    },
-    {
-      date: new Date(2022, 11, 6, 8, 32),
-      status: "present",
-    },
-    {
-      date: new Date(2022, 11, 7, 8, 36),
-      status: "absent",
-    },
-    {
-      date: new Date(2022, 11, 8, 8, 37),
-      status: "present",
-    },
-  ];
+interface LecturesListProps {}
+
+const LecturesList: React.FC<LecturesListProps> = () => {
+  const route = useRoute<StudentStackScreenProps<"LectureList">["route"]>();
+  const data = route.params.attendances;
 
   return (
     <View style={styles.mainContainer}>
@@ -71,10 +38,7 @@ const LecturesList = () => {
 
 // const images = [bg_Image_1, bg_Image_2, bg_Image_3, bg_Image_4];
 interface _LectureCardProps {
-  attendance: {
-    date: Date;
-    status: "present" | "absent";
-  };
+  attendance: StudentViewAttendanceObject;
 }
 
 const statusColor = {
@@ -82,46 +46,46 @@ const statusColor = {
   absent: colors.error,
 };
 
-const _LectureCard: React.FC<_LectureCardProps> = (props) => {
+const _LectureCard: React.FC<_LectureCardProps> = ({ attendance }) => {
   const navigation =
     useNavigation<ParentStackScreenProps<"CoursesList">["navigation"]>();
-  const { date, status } = props.attendance;
+  const { heldOnDate, status, time } = attendance;
+
+  const handleChallenge = () => {
+    Alert.alert(
+      "Challenge Attendance!",
+      "Are you sure?", // <- this part is optional, you can pass an empty string
+      [
+        {
+          text: "Challenge",
+          onPress: () => console.log("OK Pressed"),
+          style: "default",
+        },
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
   return (
-    <Card style={styles.cardContainer} elevation={2}>
+    <Card style={styles.cardContainer} elevation={2} onPress={handleChallenge}>
       {/* <Image source={images[2]} style={styles.imageContainer} /> */}
       <View style={styles.coursesDetailsContainer}>
         {/* date and time */}
         <View style={styles.infoContainer}>
-          <Text style={gStyles.cardTitleText}>{date.toDateString()}</Text>
-          <Text style={gStyles.cardDetailsText}>
-            {date.toLocaleTimeString()}
-          </Text>
+          <Text style={gStyles.cardTitleText}>{heldOnDate}</Text>
+          <Text style={gStyles.cardDetailsText}>{time}</Text>
         </View>
         {/* challenge button */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.challengeButton}
-          onPress={() => {
-            Alert.alert(
-              "Challenge Attendance!",
-              "Are you sure?", // <- this part is optional, you can pass an empty string
-              [
-                {
-                  text: "Challenge",
-                  onPress: () => console.log("OK Pressed"),
-                  style: "default",
-                },
-                {
-                  text: "Cancel",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel",
-                },
-              ],
-              { cancelable: false }
-            );
-          }}
+          onPress={}
         >
           <FontAwesome5 name="ban" color={colors.error} size={20} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* attendance status */}
         <View style={styles.statusContainer}>

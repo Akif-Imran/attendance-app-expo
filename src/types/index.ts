@@ -4,14 +4,16 @@ export type AuthStackParamsList = {
     ParentStack: undefined;
     StudentStack: undefined;
     Login: undefined;
-}
+};
 //teacherStacks
 export type TeacherStackParamsList = {
     Dashboard: undefined;
     CoursesList: undefined;
-    ClassesList: {
+    ClassesList:
+    | {
         course: any;
-    } | undefined;
+    }
+    | undefined;
     Course: undefined;
     ImageViewer: undefined;
     Notification: undefined;
@@ -22,7 +24,7 @@ export type TeacherStackParamsList = {
         slot: number;
         venue: string;
     };
-}
+};
 export type ParentStackParamsList = {
     Dashboard: undefined;
     CoursesList: {
@@ -31,33 +33,49 @@ export type ParentStackParamsList = {
     LectureList: {
         courseName: string;
     };
-}
+};
 
 export type StudentStackParamsList = {
     Dashboard: undefined;
     LectureList: {
+        courseCode: string;
         courseName: string;
+        attendances: StudentViewAttendanceObject[];
     };
-}
-//teacher screens
-type CoursesListProps = StackScreenProps<TeacherStackParamsList, 'CoursesList'>;
-export type TeacherStackScreenProps<T extends keyof TeacherStackParamsList> = StackScreenProps<TeacherStackParamsList, T>;
-export type ParentStackScreenProps<T extends keyof ParentStackParamsList> = StackScreenProps<ParentStackParamsList, T>;
-export type StudentStackScreenProps<T extends keyof StudentStackParamsList> = StackScreenProps<StudentStackParamsList, T>;
+};
+//#region teacher screens
+type CoursesListProps = StackScreenProps<TeacherStackParamsList, "CoursesList">;
+export type TeacherStackScreenProps<T extends keyof TeacherStackParamsList> =
+    StackScreenProps<TeacherStackParamsList, T>;
+export type ParentStackScreenProps<T extends keyof ParentStackParamsList> =
+    StackScreenProps<ParentStackParamsList, T>;
+export type StudentStackScreenProps<T extends keyof StudentStackParamsList> =
+    StackScreenProps<StudentStackParamsList, T>;
 
-export type ApiUserType = {
+export type ApiUserType = "Student" | "Admin" | "Parent" | "Teacher";
+
+export type ApiLoginResponseUser = {
     id: number;
     username: string;
-    userType: string;
+    userType: ApiUserType;
     firstName: string;
     lastName: string;
+};
+
+export interface ApiLoginResponseStudent extends ApiLoginResponseUser {
+    degree: string;
+    discipline: string;
+    section: string;
+    semester: number;
+    classId: number;
+    regNo: string;
 }
 
 export type ApiTimetableSessionByDay = {
     day: string;
     weekDay: number;
     sessions: ApiTimetableSession[];
-}
+};
 
 export type ApiTimetableSession = {
     subject: string;
@@ -66,7 +84,7 @@ export type ApiTimetableSession = {
     start: string;
     stop: string;
     slot: number;
-}
+};
 export type ApiStudentsByClass = ApiStudentObject[];
 
 export type ApiStudentObject = {
@@ -82,13 +100,38 @@ export type ApiStudentObject = {
     parentId: number;
     imageURL: string;
     status: string;
-}
+};
 export type AttendanceStatus = "present" | "absent";
-export type ChangeStatusCallbackType = (regNo: string, status: AttendanceStatus) => void
-
+export type ChangeStatusCallbackType = (
+    regNo: string,
+    status: AttendanceStatus
+) => void;
+//#endregion
 export type UserContextType = {
-    user: ApiUserType | undefined;
-    setUser: React.Dispatch<React.SetStateAction<ApiUserType | undefined>>;
+    user: ApiLoginResponseUser | undefined;
+    setUser: React.Dispatch<
+        React.SetStateAction<ApiLoginResponseUser | undefined>
+    >;
     isAuthorized: boolean;
     setIsAuthorized: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
+
+//#region StudentStack
+
+export type StudentViewAttendanceObject = {
+    heldOnDate: string;
+    lectureId: number;
+    attendanceNo: number;
+    status: AttendanceStatus;
+    time: string;
+};
+export type ApiCourseWithAttendances = {
+    courseCode: string;
+    courseName: string;
+    session: string;
+    attendances: StudentViewAttendanceObject[];
+    lectureCount: number;
+    presentCount: number;
+};
+export type ApiCourseList = ApiCourseWithAttendances[];
+//#endregion

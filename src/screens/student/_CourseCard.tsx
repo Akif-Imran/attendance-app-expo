@@ -2,34 +2,60 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Card } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { ParentStackScreenProps, TeacherStackScreenProps } from "../../types";
+import {
+  ApiCourseWithAttendances,
+  AttendanceStatus,
+  ParentStackScreenProps,
+  TeacherStackScreenProps,
+  StudentStackScreenProps,
+} from "../../types";
 import { colors, gStyles } from "../../theme";
 
 const _CourseCard = (props) => {
   const navigation =
-    useNavigation<ParentStackScreenProps<"CoursesList">["navigation"]>();
-  const { session, course, title, percentage, last } = props.course;
+    useNavigation<StudentStackScreenProps<"Dashboard">["navigation"]>();
+  const {
+    session,
+    courseCode,
+    courseName,
+    lectureCount,
+    presentCount,
+    attendances,
+  }: ApiCourseWithAttendances = props.course;
+  const percentage = (presentCount / lectureCount) * 100;
+  const lastStatus: AttendanceStatus =
+    attendances[attendances.length - 1].status;
 
   const getColor = (percentage: string) => {
     const percent = parseInt(percentage);
     if (percent < 75) return colors.error;
     return colors.primary;
   };
+
   return (
     <Card
       style={styles.mainContainer}
       elevation={3}
-      onPress={() => navigation.navigate("LectureList", { courseName: course })}
+      onPress={() =>
+        navigation.navigate("LectureList", {
+          courseCode: courseCode,
+          attendances: attendances,
+          courseName: courseName,
+        })
+      }
     >
       <View style={styles.coursesDetailsContainer}>
         <View style={styles.courseWithPercentage}>
           <Text
             style={gStyles.cardDetailsText}
-          >{`${session} | ${course}`}</Text>
+          >{`${session} | ${courseCode}`}</Text>
           <Text
-            style={[styles.courseDetailsText, { color: getColor(percentage) }]}
+            style={[
+              styles.courseDetailsText,
+              { color: getColor(percentage.toFixed(1)) },
+            ]}
           >
-            {percentage}%
+            {percentage.toFixed(1)}%
           </Text>
         </View>
         <View
@@ -39,8 +65,16 @@ const _CourseCard = (props) => {
             flexWrap: "wrap",
           }}
         >
-          <Text style={gStyles.cardTitleText}>{title}</Text>
-          <Text style={gStyles.cardDetailsText}>Last Class: {last}</Text>
+          <Text style={gStyles.cardTitleText}>{courseName}</Text>
+          {lastStatus === "present" ? (
+            <Text style={[gStyles.cardDetailsText, { color: colors.primary }]}>
+              {lastStatus}
+            </Text>
+          ) : (
+            <Text style={[gStyles.cardDetailsText, { color: colors.error }]}>
+              {lastStatus}
+            </Text>
+          )}
         </View>
       </View>
     </Card>
@@ -91,3 +125,4 @@ const styles = StyleSheet.create({
     color: "#757575",
   },
 });
+

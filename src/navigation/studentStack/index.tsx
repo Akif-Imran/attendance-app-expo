@@ -38,7 +38,7 @@ const TeacherStack: FC<StudentStackProps> = () => {
         name="LectureList"
         component={LecturesList}
         options={({ route }) => ({
-          title: route.params.courseName,
+          title: `${route.params.courseCode}-${route.params.courseName}`,
         })}
       />
     </Stack.Navigator>

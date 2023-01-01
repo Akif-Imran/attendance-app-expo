@@ -18,7 +18,7 @@ import { _Button } from "../../../components/general";
 import { styles } from "./styles";
 import { useUserContext } from "../../../contexts";
 import { api } from "../../../helpers";
-import { ApiUserType } from "../../../types";
+import { ApiLoginResponseUser } from "../../../types";
 
 interface LoginProps {}
 
@@ -37,7 +37,7 @@ const Login: FC<LoginProps> = () => {
         password,
       });
       if (response.status === 200) {
-        const data: ApiUserType = response.data;
+        const data: ApiLoginResponseUser = response.data;
         console.log(data);
         if (data.userType) {
           setIsAuthorized(true);

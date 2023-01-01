@@ -5,7 +5,7 @@ import React, {
   useContext,
   useState,
 } from "react";
-import { ApiUserType, UserContextType } from "../types";
+import { ApiLoginResponseUser, UserContextType } from "../types";
 
 const UserContext = createContext<UserContextType>({
   isAuthorized: false,
@@ -21,7 +21,7 @@ const UserContext = createContext<UserContextType>({
 });
 
 const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<ApiUserType | undefined>();
+  const [user, setUser] = useState<ApiLoginResponseUser | undefined>();
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   return (
     <UserContext.Provider

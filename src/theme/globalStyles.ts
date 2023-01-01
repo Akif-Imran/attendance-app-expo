@@ -50,7 +50,7 @@ const globalStyles = StyleSheet.create({
     cardTitleText: {
         // paddingHorizontal: 4,
         // paddingVertical: 2,
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: "Visby-Regular",
         color: colors.lightGray,
     },
