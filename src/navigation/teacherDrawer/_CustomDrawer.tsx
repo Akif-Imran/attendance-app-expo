@@ -6,8 +6,11 @@ import {
 } from "@react-navigation/drawer";
 import { colors } from "../../theme";
 import globalStyles from "../../theme/globalStyles";
+import { Button } from "react-native-paper";
+import { useUserContext } from "../../contexts";
 
 const _CustomDrawer = (props) => {
+  const { setIsAuthorized, setUser, user } = useUserContext();
   return (
     <View style={styles.mainContainer}>
       <DrawerContentScrollView
@@ -16,16 +19,32 @@ const _CustomDrawer = (props) => {
       >
         <View style={styles.imageBackground}>
           <View>
-            <Text style={styles.cardTitleText}>Kamil Ali</Text>
-            <Text style={styles.cardDetailsText}>Lecturer</Text>
+            <Text style={styles.cardTitleText}>
+              {user?.firstName} {user?.lastName}
+            </Text>
+            {/* <Text style={styles.cardDetailsText}>
+              Department: {user?.deparment}
+            </Text> */}
           </View>
         </View>
         <View style={styles.drawerItemsListContainer}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
-      <View>
-        <Text>Our custom text</Text>
+      <View style={styles.logoutContainer}>
+        <Button
+          mode="outlined"
+          color={colors.primary}
+          icon="logout"
+          labelStyle={globalStyles.descTextPrimaryBold}
+          contentStyle={styles.buttonContentStyle}
+          onPress={() => {
+            setIsAuthorized(false);
+            setUser(undefined);
+          }}
+        >
+          Logout
+        </Button>
       </View>
     </View>
   );
@@ -37,6 +56,12 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
   },
+  logoutContainer: {
+    paddingHorizontal: 15,
+    paddingBottom: 15,
+    // borderWidth: 1,
+  },
+  buttonContentStyle: {},
   cardDetailsText: {
     ...globalStyles.cardDetailsText,
     color: colors.white,

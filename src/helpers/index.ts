@@ -1,1 +1,2 @@
-export { api } from './api'
+export { api } from './api';
+export { ai, aiImage } from './ai';

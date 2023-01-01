@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import {
-  ApiTeacherTimetable,
+import type {
+  ApiTimetableSession,
   ApiTimetableSessionByDay,
   TeacherStackScreenProps,
 } from "../../types";
@@ -20,13 +20,6 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { api } from "../../helpers";
 import { useUserContext } from "../../contexts";
 
-interface SessionType {
-  subject: string;
-  class: string;
-  venue: string;
-  start: string;
-  stop: string;
-}
 const timetable = [
   {
     day: "Sunday",
@@ -220,7 +213,7 @@ const Dashboard = () => {
 };
 
 interface RenderCardProps {
-  sessions: Array<SessionType>;
+  sessions: Array<ApiTimetableSession>;
 }
 const RenderCard: React.FC<RenderCardProps> = ({ sessions }) => {
   const navigation =
@@ -238,6 +231,8 @@ const RenderCard: React.FC<RenderCardProps> = ({ sessions }) => {
             navigation.navigate("StudentList", {
               class: value.class,
               course: value.subject,
+              slot: value.slot,
+              venue: value.venue,
             })
           }
         >

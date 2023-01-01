@@ -19,6 +19,8 @@ export type TeacherStackParamsList = {
     StudentList: {
         class: string;
         course: string;
+        slot: number;
+        venue: string;
     };
 }
 export type ParentStackParamsList = {
@@ -54,7 +56,7 @@ export type ApiUserType = {
 export type ApiTimetableSessionByDay = {
     day: string;
     weekDay: number;
-    sessions: Array<ApiTimetableSession | []>
+    sessions: ApiTimetableSession[];
 }
 
 export type ApiTimetableSession = {
@@ -65,7 +67,24 @@ export type ApiTimetableSession = {
     stop: string;
     slot: number;
 }
+export type ApiStudentsByClass = ApiStudentObject[];
 
+export type ApiStudentObject = {
+    id: number;
+    regno: string;
+    firstName: string;
+    lastName: string;
+    semester: number;
+    discipline: string;
+    degree: string;
+    section: string;
+    classId: number;
+    parentId: number;
+    imageURL: string;
+    status: string;
+}
+export type AttendanceStatus = "present" | "absent";
+export type ChangeStatusCallbackType = (regNo: string, status: AttendanceStatus) => void
 
 export type UserContextType = {
     user: ApiUserType | undefined;

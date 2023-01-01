@@ -1,13 +1,19 @@
 import { StyleSheet, Text, View, FlatList, ToastAndroid } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { _StudentCard } from "../../components";
 import { _Button } from "../../components/general";
 import { Button, IconButton } from "react-native-paper";
 import { colors } from "../../theme";
 import globalStyles from "../../theme/globalStyles";
 import * as ImagePicker from "expo-image-picker";
-import { useImagesContext } from "../../contexts";
-import { useNavigation } from "@react-navigation/native";
+import { useImagesContext, useUserContext } from "../../contexts";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  ApiStudentsByClass,
+  ChangeStatusCallbackType,
+  TeacherStackScreenProps,
+} from "../../types";
+import { api } from "../../helpers";
 
 const students = [
   {
@@ -83,12 +89,32 @@ const students = [
 ];
 
 const StudentList = () => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<TeacherStackScreenProps<"StudentList">["navigation"]>();
+  const route = useRoute<TeacherStackScreenProps<"StudentList">["route"]>();
   const { images, setImages } = useImagesContext();
   const [visible, setIsVisible] = useState(false);
+  const [students, setStudents] = useState<ApiStudentsByClass>([]);
+  const { user } = useUserContext();
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const response = await api.get(
+        `/student/get-all-students/${route.params.class}`
+      );
+      if (response.status === 200) {
+        const resData: ApiStudentsByClass = response.data;
+        setStudents(resData);
+      }
+    };
+    fetchStudents().catch((err) => console.error(err));
+  }, [route.params.class]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
+    // const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    // console.log(permission);
+    // if (!permission.granted) return;
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -125,17 +151,46 @@ const StudentList = () => {
         quality: 1,
       });
       console.log(result);
-      // if (!result.cancelled) {
-      //   if ("selected" in result) {
-      //     setImages(result.selected);
-      //     ToastAndroid.show(
-      //       "Make sure all Images are selected!",
-      //       ToastAndroid.SHORT
-      //     );
-      //   } else {
-      //     setImages([result]);
-      //   }
-      // }
+      if (!result.cancelled) {
+        setImages([...images, result]);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const changeStatus: ChangeStatusCallbackType = (regNo, status) => {
+    let arr = [...students];
+    const index = students.findIndex((value) => value.regno === regNo);
+    const s = students[index];
+    s.status = status;
+    arr.splice(index, 1, s);
+    setStudents(arr);
+  };
+
+  const markAttendance = async () => {
+    try {
+      ToastAndroid.show("Please wait...", ToastAndroid.LONG);
+      if (!user) return;
+      const attendances = students.flatMap((value) => [
+        {
+          regNo: value.regno,
+          status: value.status,
+        },
+      ]);
+      const response = await api.post("/attendance/mark-attendance", {
+        teacherId: user?.id,
+        courseName: route.params.course,
+        className: route.params.class,
+        venue: route.params.venue,
+        slot: route.params.slot,
+        jsonDate: new Date().toJSON(),
+        Session: "Spring-2022",
+        attendances: attendances,
+      });
+      if (response.status === 200) {
+        ToastAndroid.show("Attendance Marked Successfully", ToastAndroid.LONG);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -163,14 +218,20 @@ const StudentList = () => {
           color={colors.primary}
           icon="camera"
         />
-        <IconButton onPress={pickImage} color={colors.primary} icon="send" />
+        <IconButton
+          onPress={markAttendance}
+          color={colors.primary}
+          icon="send"
+        />
       </View>
       <View style={styles.cardsContainer}>
         <FlatList
           data={students}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContentContainer}
-          renderItem={({ item, index }) => <_StudentCard student={item} />}
+          renderItem={({ item, index }) => (
+            <_StudentCard student={item} changeStatus={changeStatus} />
+          )}
           keyExtractor={(_, index) => index.toString()}
         />
       </View>

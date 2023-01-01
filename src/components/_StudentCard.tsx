@@ -5,30 +5,28 @@ import { colors, gStyles, PaperTheme } from "../theme";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import globalStyles from "../theme/globalStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { ApiStudentObject, ChangeStatusCallbackType } from "../types";
 
 interface _StudentCard {
-  student: any;
+  student: ApiStudentObject;
+  changeStatus: ChangeStatusCallbackType;
 }
 
-const _StudentCard: React.FC<_StudentCard> = ({
-  student,
-}: {
-  student: {
-    regNo: string;
-    firstName: string;
-    lastName: string;
-    status: string;
-  };
-}) => {
+const _StudentCard: React.FC<_StudentCard> = ({ student, changeStatus }) => {
   const [value, setValue] = useState("present");
-  const [isPresent, setIsPresent] = useState<boolean>(false);
+  const [isPresent, setIsPresent] = useState<boolean>(
+    Boolean(student.status === "present")
+  );
 
-  const toggleStatus = () => setIsPresent((previousState) => !previousState);
+  const toggleStatus = () => {
+    changeStatus(student.regno, !isPresent ? "present" : "absent");
+    setIsPresent((previousState) => !previousState);
+  };
   return (
     <Card elevation={4} style={styles.mainContainer}>
       <View style={styles.contentContainer}>
         <View style={styles.imageContainer}>
-          <Image source={student.img} style={styles.imageStyle} />
+          <Image source={{ uri: student.imageURL }} style={styles.imageStyle} />
         </View>
         <View style={styles.detailsContainer}>
           {/* student details container */}
@@ -48,7 +46,7 @@ const _StudentCard: React.FC<_StudentCard> = ({
             </View>
             {/* text container */}
             <View style={styles.studentDetailsTextContainer}>
-              <Text style={styles.cardDetailsText}>{student.regNo}</Text>
+              <Text style={styles.cardDetailsText}>{student.regno}</Text>
               <Text style={styles.cardDetailsText}>
                 {student.firstName} {student.lastName}
               </Text>
@@ -59,15 +57,13 @@ const _StudentCard: React.FC<_StudentCard> = ({
             <TouchableOpacity
               style={[
                 styles.toggleButton,
-                isPresent
+                student.status === "present"
                   ? styles.toggleButtonPositive
                   : styles.toggleButtonNegative,
               ]}
               onPress={toggleStatus}
             >
-              <Text style={styles.attendanceStatusText}>
-                {isPresent ? "present" : "absent"}
-              </Text>
+              <Text style={styles.attendanceStatusText}>{student.status}</Text>
             </TouchableOpacity>
           </View>
         </View>

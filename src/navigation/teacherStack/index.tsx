@@ -30,6 +30,7 @@ const Stack = createStackNavigator<TeacherStackParamsList>();
 interface TeacherStackProps {
   setAuth: Dispatch<React.SetStateAction<boolean>>;
 }
+
 const TeacherStack: FC<TeacherStackProps> = () => {
   const drawerNav = useNavigation();
   const [image, setImage] = useState(null);

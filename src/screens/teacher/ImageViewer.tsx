@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { useImagesContext } from "../../contexts";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { colors } from "../../theme";
-import { IconButton } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import globalStyles from "../../theme/globalStyles";
+import { _Button } from "../../components/general";
+import { ai, aiImage } from "../../helpers";
 
 const ImageViewer = () => {
   const { images, setImages } = useImagesContext();
@@ -22,6 +24,49 @@ const ImageViewer = () => {
       </View>
     );
   }
+
+  const uploadImage = async () => {
+    const response = await ai.get("/");
+    console.log(response.data.message);
+    // let toUploadArray = [];
+    // for(let image in images){
+    // }
+    let formData = new FormData();
+    images.forEach((item, i) => {});
+    let localUri = images[0].uri;
+    console.log(localUri);
+    let filename = localUri.split("/").pop();
+    console.log("filename", filename);
+
+    let match = /\.(\w+)$/.exec(filename);
+    console.log(match);
+    let type = match ? `image/${match[1]}` : `image`;
+    console.log(type);
+
+    // formData.append("files", fs.createReadStream(filename));
+    formData.append(
+      "files",
+      {
+        uri: localUri,
+        type: "image/jpeg",
+        name: filename,
+      },
+      filename
+    );
+
+    // formData.append("files");
+    // formData.append("photo", JSON.stringify{ uri: localUri, name: filename, type });
+
+    await aiImage
+      .post("/uploadImage/", formData, {})
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
   return (
     <View style={styles.mainContainer}>
       <View style={styles.viewImageContainer}>
@@ -69,6 +114,17 @@ const ImageViewer = () => {
         )}
         keyExtractor={(_, index) => index.toString()}
       />
+      <View style={styles.buttonContainer}>
+        <Button
+          onPress={uploadImage}
+          mode="contained"
+          color={colors.primary}
+          style={styles.buttonStyle}
+          labelStyle={styles.labelStyle}
+        >
+          Mark Attendance
+        </Button>
+      </View>
     </View>
   );
 };
@@ -111,5 +167,21 @@ const styles = StyleSheet.create({
   imagesContainer: {
     paddingVertical: 4,
     paddingHorizontal: 4,
+  },
+  buttonContainer: {
+    // flex: 1,
+    marginTop: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    // borderWidth: 1,
+  },
+  buttonStyle: {
+    width: "100%",
+    borderRadius: 15,
+    paddingVertical: 15,
+  },
+  labelStyle: {
+    fontSize: 16,
+    fontFamily: "Visby-Bold",
   },
 });
