@@ -1,4 +1,4 @@
-import type { StackScreenProps } from "@react-navigation/stack";
+import type { StackNavigationOptions, StackScreenProps } from "@react-navigation/stack";
 export type AuthStackParamsList = {
     TeacherDrawer: undefined;
     ParentStack: undefined;
@@ -42,7 +42,13 @@ export type StudentStackParamsList = {
         courseName: string;
         attendances: StudentViewAttendanceObject[];
     };
+    Notification: undefined;
 };
+export type StudentStackDashboardOptionsCallback =
+    (props: {
+        navigation: StudentStackScreenProps<"Dashboard">["navigation"],
+        route: StudentStackScreenProps<"Dashboard">["route"]
+    }) => StackNavigationOptions;
 //#region teacher screens
 type CoursesListProps = StackScreenProps<TeacherStackParamsList, "CoursesList">;
 export type TeacherStackScreenProps<T extends keyof TeacherStackParamsList> =

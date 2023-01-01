@@ -31,6 +31,11 @@ const LecturesList: React.FC<LecturesListProps> = () => {
         renderItem={({ index, item }) => <_LectureCard attendance={item} />}
         keyExtractor={(_, index) => index.toString()}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={() => (
+          <View style={styles.mainContainer}>
+            <Text style={styles.title}>No Courses Enrolled!</Text>
+          </View>
+        )}
       />
     </View>
   );
@@ -106,6 +111,12 @@ const styles = StyleSheet.create({
   mainContainer: {
     paddingHorizontal: 4,
     paddingTop: 15,
+  },
+  title: {
+    ...gStyles.cardTitleText,
+    textAlign: "center",
+    color: colors.titleText,
+    fontFamily: "Visby-Medium",
   },
   cardContainer: {
     // flex: 1,
