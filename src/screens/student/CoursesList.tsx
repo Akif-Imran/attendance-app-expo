@@ -1,46 +1,25 @@
-import { FlatList, StyleSheet, Text, View, RefreshControl } from "react-native";
-import React, { useEffect, useState } from "react";
-import _CourseCard from "./_CourseCard";
 import {
-  ApiLoginResponseStudent,
-  ApiCourseList,
-  ApiCourseWithAttendances,
-  ParentStackScreenProps,
-} from "../../types";
-import { colors, gStyles } from "../../theme";
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  RefreshControl,
+  ActivityIndicator,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { api } from "../../helpers";
+import { colors, gStyles } from "../../theme";
 import { useUserContext } from "../../contexts";
+import { ApiLoginResponseStudent, ApiCourseList } from "../../types";
 
-/* const courseList = [
-    {
-      session: "SPRING-22",
-      course: "CC-2022S",
-      title: "COMPILER CONSTRUCTION",
-      percentage: "81",
-      last: "present",
-    },
-    {
-      session: "SPRING-22",
-      course: "MAD-2022S",
-      title: "MOBILE APPLICATION DEVELOPMENT",
-      percentage: "94",
-      last: "present",
-    },
-    {
-      session: "SPRING-22",
-      course: "FYP-2022S",
-      title: "FINAL YEAR PROJECT",
-      percentage: "67",
-      last: "absent",
-    },
-  ]; */
+import _CourseCard from "./_CourseCard";
+import { session } from "../../helpers/api";
 
 const CoursesList: React.FC = () => {
   const [courseList, setCourseList] = useState<ApiCourseList>([]);
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const { user } = useUserContext();
-  const session: string = "spring-2022";
 
   const fetchCourses: (
     user: ApiLoginResponseStudent,
@@ -80,9 +59,21 @@ const CoursesList: React.FC = () => {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <_CourseCard course={item} />}
         ListEmptyComponent={() => (
-          <View style={styles.mainContainer}>
-            <Text style={styles.title}>No Courses Enrolled!</Text>
-          </View>
+          <>
+            {isFetching ? (
+              <View style={styles.activityIndicatorContainer}>
+                <ActivityIndicator
+                  color={colors.primary}
+                  size="large"
+                  animating={isFetching}
+                />
+              </View>
+            ) : (
+              <View style={styles.mainContainer}>
+                <Text style={styles.title}>No Courses Enrolled!</Text>
+              </View>
+            )}
+          </>
         )}
         refreshControl={
           <RefreshControl
@@ -109,6 +100,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingTop: 15,
     // borderWidth: 1,
+  },
+  activityIndicatorContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     ...gStyles.cardTitleText,

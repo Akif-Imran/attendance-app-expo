@@ -15,7 +15,19 @@ export type TeacherStackParamsList = {
     }
     | undefined;
     Course: undefined;
-    ImageViewer: undefined;
+    ImageViewer: {
+        teacherId: number | undefined;
+        courseName: string;
+        className: string;
+        venue: string;
+        slot: number;
+        jsonDate: string;
+        Session: string;
+        attendances: {
+            regNo: string;
+            status: string;
+        }[],
+    };
     Notification: undefined;
     // Attendance: undefined;
     StudentList: {
@@ -105,7 +117,10 @@ export type ApiStudentObject = {
     classId: number;
     parentId: number;
     imageURL: string;
-    status: string;
+    status: AttendanceStatus;
+    lectureCount: number;
+    presentCount: number;
+    latestAttendanceStatus: AttendanceStatus;
 };
 export type AttendanceStatus = "present" | "absent";
 export type ChangeStatusCallbackType = (
@@ -121,6 +136,10 @@ export type UserContextType = {
     isAuthorized: boolean;
     setIsAuthorized: React.Dispatch<React.SetStateAction<boolean>>;
 };
+export type StudentContextType = {
+    students: ApiStudentsByClass;
+    setStudents: React.Dispatch<React.SetStateAction<ApiStudentsByClass>>;
+}
 
 //#region StudentStack
 

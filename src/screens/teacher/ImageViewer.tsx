@@ -6,11 +6,17 @@ import { colors } from "../../theme";
 import { Button, IconButton } from "react-native-paper";
 import globalStyles from "../../theme/globalStyles";
 import { _Button } from "../../components/general";
-import { ai, aiImage } from "../../helpers";
+import { ai, aiImage, api, baseURL, baseURLAI } from "../../helpers";
+import { useRoute } from "@react-navigation/native";
+import { ChangeStatusCallbackType, TeacherStackScreenProps } from "../../types";
+import { useStudentContext } from "../../contexts/StudentListProvider";
 
 const ImageViewer = () => {
+  const route = useRoute<TeacherStackScreenProps<"ImageViewer">["route"]>();
   const { images, setImages } = useImagesContext();
   const [viewImage, setViewImage] = useState({ index: 0, ...images[0] });
+  const { students, setStudents } = useStudentContext();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const deleteImage = (delIndex: number) => {
     const filteredImages = images.filter((value, index) => index !== delIndex);
@@ -25,45 +31,68 @@ const ImageViewer = () => {
     );
   }
 
-  const uploadImage = async () => {
-    const response = await ai.get("/");
-    console.log(response.data.message);
-    // let toUploadArray = [];
-    // for(let image in images){
-    // }
+  const changeStatus: ChangeStatusCallbackType = (regNo, status) => {
+    let arr = [...students];
+    const index = students.findIndex((value) => value.regno === regNo);
+    const s = students[index];
+    s.status = status;
+    arr.splice(index, 1, s);
+    setStudents(arr);
+  };
+
+  const addLectureDetails = async () => {
+    setLoading(true);
+    console.log("called");
+
     let formData = new FormData();
-    images.forEach((item, i) => {});
-    let localUri = images[0].uri;
-    console.log(localUri);
-    let filename = localUri.split("/").pop();
-    console.log("filename", filename);
+    for (let image of images) {
+      let localUri = image.uri;
+      console.log("uri", localUri);
+      let filename = localUri.split("/").pop() || "";
+      console.log("filename", filename);
+      let match = /\.(\w+)$/.exec(filename);
+      console.log("match", match);
+      let type = match ? `image/${match[1]}` : `image`;
+      console.log("type", type);
+      const photo = image;
 
-    let match = /\.(\w+)$/.exec(filename);
-    console.log(match);
-    let type = match ? `image/${match[1]}` : `image`;
-    console.log(type);
-
-    // formData.append("files", fs.createReadStream(filename));
-    formData.append(
-      "files",
-      {
-        uri: localUri,
-        type: "image/jpeg",
+      formData.append("files", {
         name: filename,
-      },
-      filename
-    );
+        type: type,
+        uri: photo.uri,
+      });
+    }
 
-    // formData.append("files");
-    // formData.append("photo", JSON.stringify{ uri: localUri, name: filename, type });
+    Object.entries(route.params).forEach((value) => {
+      if (value[0] !== "attendances") formData.append(value[0], value[1]);
+    });
+    console.log(JSON.stringify(formData));
 
-    await aiImage
-      .post("/uploadImage/", formData, {})
+    await api
+      .post("/lecture/add-lecture-details", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => {
-        console.log(res.data.message);
+        console.log(JSON.stringify(res.data));
+        const resData = res.data;
+        for (let regNo of resData["attendances"]) {
+          changeStatus(regNo, "present");
+        }
+        let arr = students.sort((a, b) => {
+          if (a.status > b.status) return 1;
+          else if (a.status < b.status) return -1;
+          else return 0;
+        });
+        console.log("sorted array", arr);
+        setStudents(arr);
       })
       .catch((err) => {
-        console.log(err.response);
+        console.error(err.response);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -116,13 +145,14 @@ const ImageViewer = () => {
       />
       <View style={styles.buttonContainer}>
         <Button
-          onPress={uploadImage}
+          loading={loading}
+          onPress={addLectureDetails}
           mode="contained"
           color={colors.primary}
           style={styles.buttonStyle}
           labelStyle={styles.labelStyle}
         >
-          Mark Attendance
+          Run Facial Recognition
         </Button>
       </View>
     </View>

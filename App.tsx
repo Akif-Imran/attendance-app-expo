@@ -17,7 +17,7 @@ import {
 } from "@react-navigation/native";
 
 import MainApp from "./src";
-import { ImagesProvider } from "./src/contexts";
+import { ImagesProvider, StudentListProvider } from "./src/contexts";
 import { AuthProvider } from "./src/contexts";
 
 SplashScreen.preventAutoHideAsync();
@@ -66,7 +66,9 @@ export default function App() {
             <Provider>
               <ImagesProvider>
                 <AuthProvider>
-                  <MainApp />
+                  <StudentListProvider>
+                    <MainApp />
+                  </StudentListProvider>
                 </AuthProvider>
               </ImagesProvider>
             </Provider>

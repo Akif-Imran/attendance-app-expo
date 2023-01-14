@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState, useContext, createContext } from "react";
+import { ImageInfo } from "expo-image-picker";
 
 type ImageAssetType = {
   assetId: string | null;
@@ -12,15 +13,15 @@ type ImageAssetType = {
   width: number;
 };
 const Images = createContext<{
-  images: Array<ImageAssetType>;
-  setImages: React.Dispatch<React.SetStateAction<ImageAssetType[]>>;
+  images: ImageInfo[];
+  setImages: React.Dispatch<React.SetStateAction<ImageInfo[]>>;
 }>({
   images: [],
   setImages: () => {},
 });
 
 const ImagesProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [images, setImages] = useState<Array<ImageAssetType>>([]);
+  const [images, setImages] = useState<ImageInfo[]>([]);
   return (
     <Images.Provider
       value={{

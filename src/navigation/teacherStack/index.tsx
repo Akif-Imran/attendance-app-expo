@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { FC, Dispatch, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
@@ -24,6 +30,7 @@ import type {
 } from "expo-image-picker";
 import { Camera, CameraType } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
+import { useImagesContext } from "../../contexts";
 
 const Stack = createStackNavigator<TeacherStackParamsList>();
 
@@ -34,6 +41,7 @@ interface TeacherStackProps {
 const TeacherStack: FC<TeacherStackProps> = () => {
   const drawerNav = useNavigation();
   const [image, setImage] = useState(null);
+  const { images, setImages } = useImagesContext();
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -47,6 +55,32 @@ const TeacherStack: FC<TeacherStackProps> = () => {
       });
       console.log(result);
       if (!result.cancelled) {
+        if ("selected" in result) {
+          setImages(result.selected);
+          ToastAndroid.show(
+            "Make sure all Images are selected!",
+            ToastAndroid.SHORT
+          );
+        } else {
+          setImages([result]);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const captureImage = async () => {
+    try {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
+        allowsMultipleSelection: true,
+        quality: 1,
+      });
+      console.log(result);
+      if (!result.cancelled) {
+        setImages([...images, result]);
       }
     } catch (e) {
       console.error(e);
@@ -121,26 +155,29 @@ const TeacherStack: FC<TeacherStackProps> = () => {
         component={StudentList}
         options={({ route }) => ({
           title: `${route.params.class} ${route.params.course}`,
-          headerRight: () => (
-            <>
-              <TouchableOpacity
-                style={styles.iconContainer}
-                onPress={pickImage}
-              >
-                <Ionicons name="image" color={colors.white} size={23} />
-              </TouchableOpacity>
-              <View style={styles.iconContainer}>
-                <FontAwesome5 name="camera" size={20} color={colors.white} />
-              </View>
-              <View style={styles.iconContainer}>
-                <MaterialCommunityIcons
-                  name="send"
-                  size={20}
-                  color={colors.white}
-                />
-              </View>
-            </>
-          ),
+          // headerRight: () => (
+          //   <>
+          //     <TouchableOpacity
+          //       style={styles.iconContainer}
+          //       onPress={pickImage}
+          //     >
+          //       <Ionicons name="image" color={colors.white} size={23} />
+          //     </TouchableOpacity>
+          //     <TouchableOpacity
+          //       style={styles.iconContainer}
+          //       onPress={captureImage}
+          //     >
+          //       <FontAwesome5 name="camera" size={20} color={colors.white} />
+          //     </TouchableOpacity>
+          //     <TouchableOpacity style={styles.iconContainer}>
+          //       <MaterialCommunityIcons
+          //         name="send"
+          //         size={20}
+          //         color={colors.white}
+          //       />
+          //     </TouchableOpacity>
+          //   </>
+          // ),
           headerRightContainerStyle: {
             paddingRight: 8,
             flexDirection: "row",
