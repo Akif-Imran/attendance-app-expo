@@ -1,29 +1,46 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { FC } from "react";
 import { Card } from "react-native-paper";
 import { _Icon } from "./general";
 import { gStyles } from "../theme";
 import { _Button } from "./general";
 import { useNavigation } from "@react-navigation/native";
-import { TeacherStackScreenProps } from "../types";
+import {
+  TeacherStackScreenProps,
+  TeacherTaughtClassesClass,
+  TeacherTaughtClassesLecture,
+} from "../types";
 
-const _ClassCard = ({ item }) => {
-  const navigation =
-    useNavigation<TeacherStackScreenProps<"ClassesList">["navigation"]>();
+interface _ClassCardProps {
+  item: TeacherTaughtClassesClass;
+}
+
+const _ClassCard: FC<_ClassCardProps> = ({ item }) => {
+  const navigation = useNavigation<any>();
+
+  const lastClass: TeacherTaughtClassesLecture | undefined =
+    item.lectures.length !== 0
+      ? item.lectures[item.lectures.length - 1]
+      : undefined;
   return (
-    <Card style={styles.mainCardContainer}>
+    <Card style={styles.mainCardContainer} onPress={() => {}}>
       <View style={styles.mainContainer}>
-        <View style={styles.iconContainer}>
+        {/* <View style={styles.iconContainer}>
           <Image
             tintColor="#999999"
             source={require("../assets/images/png/class.png")}
             style={styles.imageStyle}
           />
-        </View>
+        </View> */}
         <View style={styles.detailsContainer}>
-          <Text style={gStyles.cardTitleText}>{item.name}</Text>
+          <Text style={gStyles.cardInfoTitleText}>
+            {item.className} {item.courseName}
+          </Text>
           <Text style={gStyles.cardDetailsText}>
-            {item.conductedClasses} classes conducted.
+            Last Class {lastClass ? lastClass.heldOnDate : "NA"}
+          </Text>
+          <Text style={gStyles.cardDetailsText}>
+            {item.lectures.length} classes conducted.
           </Text>
           <View style={styles.buttonContainer}>
             {/* <View style={styles.individualButtonContainer}>
@@ -33,9 +50,6 @@ const _ClassCard = ({ item }) => {
                 size="small"
               />
             </View> */}
-            <View style={styles.individualButtonContainer}>
-              <_Button title="Update" onPress={() => {}} size="small" />
-            </View>
           </View>
         </View>
       </View>
@@ -96,3 +110,4 @@ const styles = StyleSheet.create({
     height: 85,
   },
 });
+

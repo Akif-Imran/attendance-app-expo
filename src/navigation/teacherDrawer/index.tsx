@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import React, { FC, Dispatch } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { ClassesList, CoursesList, Notification } from "../../screens/teacher";
+import { Attendance, Notification } from "../../screens/teacher";
 import TeacherStack from "../teacherStack";
 import { colors } from "../../theme";
 import globalStyles from "../../theme/globalStyles";
@@ -70,23 +70,9 @@ const TeacherDrawer: FC<TeacherStackProps> = () => {
           ),
         }}
       />
-      {/* <Drawer.Screen
-        name="Courses"
-        component={CoursesList}
-        options={{
-          title: "My Courses",
-          drawerIcon: ({ size, focused }) => (
-            <MaterialCommunityIcons
-              name="bookshelf"
-              size={20}
-              color={focused ? colors.white : colors.iconGray}
-            />
-          ),
-        }}
-      /> */}
       <Drawer.Screen
         name="Attendance"
-        component={ClassesList}
+        component={Attendance}
         options={{
           drawerIcon: ({ size, focused }) => (
             <Ionicons

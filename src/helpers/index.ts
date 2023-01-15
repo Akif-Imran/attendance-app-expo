@@ -1,2 +1,2 @@
 export { api, baseURL } from './api';
-export { ai, aiImage, baseURLAI } from './ai';
+export { ai, aiImage } from './ai';

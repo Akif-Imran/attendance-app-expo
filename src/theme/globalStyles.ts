@@ -7,6 +7,14 @@ const globalStyles = StyleSheet.create({
         fontSize: 24,
         color: colors.titleText,
     },
+    cardInfoTitleText: {
+        fontFamily: "Visby-Bold",
+        fontSize: 16,
+        color: colors.titleText,
+        textAlign: "left",
+        textAlignVertical: "center",
+        // borderWidth: 1,
+    },
     smallHeaderText: {
         fontFamily: "Visby-Bold",
         fontSize: 20,

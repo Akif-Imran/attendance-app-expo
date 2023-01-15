@@ -8,13 +8,13 @@ export type AuthStackParamsList = {
 //teacherStacks
 export type TeacherStackParamsList = {
     Dashboard: undefined;
-    CoursesList: undefined;
-    ClassesList:
-    | {
-        course: any;
-    }
-    | undefined;
-    Course: undefined;
+    // CoursesList: undefined;
+    // ClassesList:
+    // | {
+    //     course: any;
+    // }
+    // | undefined;
+    // Course: undefined;
     ImageViewer: {
         teacherId: number | undefined;
         courseName: string;
@@ -29,7 +29,6 @@ export type TeacherStackParamsList = {
         }[],
     };
     Notification: undefined;
-    // Attendance: undefined;
     StudentList: {
         class: string;
         course: string;
@@ -166,3 +165,21 @@ export type AttendanceWithRegNo = {
     regNo: string;
 }
 export type AttendancesWithRegNo = AttendanceWithRegNo[];
+
+export type TeacherTaughtClassesLecture = {
+    id: number;
+    lectureSlotId: number;
+    session: string;
+    venue: string;
+    heldOnDate: string;
+}
+export type TeacherTaughtClassesClass = {
+    teacherId: number;
+    courseCode: string;
+    courseName: string;
+    creditHours: number;
+    classId: number;
+    className: string;
+    lectures: TeacherTaughtClassesLecture[];
+}
+export type TeacherTaughtClassesResponse = TeacherTaughtClassesClass[];

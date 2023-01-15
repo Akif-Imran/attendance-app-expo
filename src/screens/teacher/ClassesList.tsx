@@ -1,28 +1,36 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import _ClassCard from "../../components/_ClassCard";
+import { api } from "../../helpers";
+import { session } from "../../helpers/api";
+import { useUserContext } from "../../contexts";
+import { TeacherTaughtClassesResponse } from "../../types";
 
 const ClassesList = () => {
   //get teacher credentails from context api
-  const classesList = [
-    { name: "BSCS-7A", conductedClasses: 12 },
-    { name: "BSCS-7B", conductedClasses: 11 },
-    { name: "BSCS-7C", conductedClasses: 10 },
-    { name: "BSIT-7A", conductedClasses: 12 },
-    { name: "BSCS-7A", conductedClasses: 12 },
-    { name: "BSCS-7B", conductedClasses: 11 },
-    { name: "BSCS-7C", conductedClasses: 10 },
-    { name: "BSIT-7A", conductedClasses: 12 },
-    { name: "BSCS-7A", conductedClasses: 12 },
-    { name: "BSCS-7B", conductedClasses: 11 },
-    { name: "BSCS-7C", conductedClasses: 10 },
-    { name: "BSIT-7A", conductedClasses: 12 },
-  ];
+  const { user } = useUserContext();
+  const [data, setData] = useState<TeacherTaughtClassesResponse>([]);
 
+  useEffect(() => {
+    api
+      .get(
+        `/Teacher/get-teacher-classes?teacherId=${user?.id}&session=${session}`
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          const resData: TeacherTaughtClassesResponse = res.data;
+          console.log(resData);
+          setData(resData);
+        }
+      })
+      .catch((err) => {
+        console.log("error occurred");
+      });
+  }, []);
   return (
     <View style={styles.mainContainer}>
       <FlatList
-        data={classesList}
+        data={data}
         contentContainerStyle={styles.listContainerStyle}
         renderItem={({ item }) => <_ClassCard item={item} />}
         showsVerticalScrollIndicator={false}
@@ -42,3 +50,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
 });
+

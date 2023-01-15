@@ -59,7 +59,7 @@ const _StudentCard: React.FC<_StudentCard> = ({ student, changeStatus }) => {
             {/* text container */}
             {/* </View> */}
             <View style={styles.studentDetailsTextContainer}>
-              <Text style={styles.studentName}>
+              <Text style={gStyles.cardInfoTitleText}>
                 {student.firstName} {student.lastName}
               </Text>
               <Text style={styles.cardDetailsText}>{student.regno}</Text>
@@ -136,14 +136,6 @@ const styles = StyleSheet.create({
     ...gStyles.descText,
     color: colors.white,
     textAlign: "center",
-    textAlignVertical: "center",
-    // borderWidth: 1,
-  },
-  studentName: {
-    fontFamily: "Visby-Bold",
-    fontSize: 16,
-    color: colors.titleText,
-    textAlign: "left",
     textAlignVertical: "center",
     // borderWidth: 1,
   },

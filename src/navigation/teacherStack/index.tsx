@@ -11,7 +11,6 @@ import {
   Attendance,
   ImageViewer,
   ClassesList,
-  Course,
   CoursesList,
   Notification,
   Dashboard,
@@ -40,52 +39,7 @@ interface TeacherStackProps {
 
 const TeacherStack: FC<TeacherStackProps> = () => {
   const drawerNav = useNavigation();
-  const [image, setImage] = useState(null);
-  const { images, setImages } = useImagesContext();
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    try {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: false,
-        allowsMultipleSelection: true,
-        // aspect: [4, 3],
-        quality: 1,
-      });
-      console.log(result);
-      if (!result.cancelled) {
-        if ("selected" in result) {
-          setImages(result.selected);
-          ToastAndroid.show(
-            "Make sure all Images are selected!",
-            ToastAndroid.SHORT
-          );
-        } else {
-          setImages([result]);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const captureImage = async () => {
-    try {
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: false,
-        allowsMultipleSelection: true,
-        quality: 1,
-      });
-      console.log(result);
-      if (!result.cancelled) {
-        setImages([...images, result]);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
   return (
     <Stack.Navigator
       screenOptions={{
@@ -137,47 +91,10 @@ const TeacherStack: FC<TeacherStackProps> = () => {
         }}
       />
       <Stack.Screen
-        name="CoursesList"
-        component={CoursesList}
-        options={{
-          title: "Courses List",
-        }}
-      />
-      <Stack.Screen
-        name="ClassesList"
-        component={ClassesList}
-        options={{
-          title: "Classes List",
-        }}
-      />
-      <Stack.Screen
         name="StudentList"
         component={StudentList}
         options={({ route }) => ({
           title: `${route.params.class} ${route.params.course}`,
-          // headerRight: () => (
-          //   <>
-          //     <TouchableOpacity
-          //       style={styles.iconContainer}
-          //       onPress={pickImage}
-          //     >
-          //       <Ionicons name="image" color={colors.white} size={23} />
-          //     </TouchableOpacity>
-          //     <TouchableOpacity
-          //       style={styles.iconContainer}
-          //       onPress={captureImage}
-          //     >
-          //       <FontAwesome5 name="camera" size={20} color={colors.white} />
-          //     </TouchableOpacity>
-          //     <TouchableOpacity style={styles.iconContainer}>
-          //       <MaterialCommunityIcons
-          //         name="send"
-          //         size={20}
-          //         color={colors.white}
-          //       />
-          //     </TouchableOpacity>
-          //   </>
-          // ),
           headerRightContainerStyle: {
             paddingRight: 8,
             flexDirection: "row",
@@ -188,7 +105,6 @@ const TeacherStack: FC<TeacherStackProps> = () => {
         })}
       />
       <Stack.Screen name="Notification" component={Notification} />
-      <Stack.Screen name="Course" component={Course} />
     </Stack.Navigator>
   );
 };

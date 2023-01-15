@@ -1,19 +1,19 @@
 import { BackHandler, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import CoursesList from "./CoursesList";
 import ClassesList from "./ClassesList";
+import LectureList from "./LecturesList";
 
 const Stack = createStackNavigator();
 
 const Attendance = () => {
   return (
     <Stack.Navigator
-      initialRouteName="CoursesList"
+      initialRouteName="ClassesList"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="CoursesList" component={CoursesList} />
       <Stack.Screen name="ClassesList" component={ClassesList} />
+      <Stack.Screen name="LectureList" component={LectureList} />
     </Stack.Navigator>
   );
 };
@@ -21,3 +21,4 @@ const Attendance = () => {
 export default Attendance;
 
 const styles = StyleSheet.create({});
+
