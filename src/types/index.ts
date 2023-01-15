@@ -160,3 +160,9 @@ export type ApiCourseWithAttendances = {
 };
 export type ApiCourseList = ApiCourseWithAttendances[];
 //#endregion
+
+export type AttendanceWithRegNo = {
+    status: AttendanceStatus;
+    regNo: string;
+}
+export type AttendancesWithRegNo = AttendanceWithRegNo[];

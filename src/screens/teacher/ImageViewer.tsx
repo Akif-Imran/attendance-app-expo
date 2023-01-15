@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+  ToastAndroid,
+} from "react-native";
 import React, { useState } from "react";
 import { useImagesContext } from "../../contexts";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -7,12 +14,14 @@ import { Button, IconButton } from "react-native-paper";
 import globalStyles from "../../theme/globalStyles";
 import { _Button } from "../../components/general";
 import { ai, aiImage, api, baseURL, baseURLAI } from "../../helpers";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ChangeStatusCallbackType, TeacherStackScreenProps } from "../../types";
 import { useStudentContext } from "../../contexts/StudentListProvider";
 
 const ImageViewer = () => {
   const route = useRoute<TeacherStackScreenProps<"ImageViewer">["route"]>();
+  const navigation =
+    useNavigation<TeacherStackScreenProps<"ImageViewer">["navigation"]>();
   const { images, setImages } = useImagesContext();
   const [viewImage, setViewImage] = useState({ index: 0, ...images[0] });
   const { students, setStudents } = useStudentContext();
@@ -54,12 +63,11 @@ const ImageViewer = () => {
       console.log("match", match);
       let type = match ? `image/${match[1]}` : `image`;
       console.log("type", type);
-      const photo = image;
 
       formData.append("files", {
         name: filename,
         type: type,
-        uri: photo.uri,
+        uri: image.uri,
       });
     }
 
@@ -77,8 +85,14 @@ const ImageViewer = () => {
       .then((res) => {
         console.log(JSON.stringify(res.data));
         const resData = res.data;
-        for (let regNo of resData["attendances"]) {
-          changeStatus(regNo, "present");
+        const attendances: string[] = resData["attendances"];
+
+        for (let student of students) {
+          if (attendances.includes(student.regno)) {
+            changeStatus(student.regno, "present");
+          } else {
+            changeStatus(student.regno, "absent");
+          }
         }
         let arr = students.sort((a, b) => {
           if (a.status > b.status) return 1;
@@ -87,6 +101,8 @@ const ImageViewer = () => {
         });
         console.log("sorted array", arr);
         setStudents(arr);
+        ToastAndroid.show("Facial recognition completed.", ToastAndroid.SHORT);
+        navigation.goBack();
       })
       .catch((err) => {
         console.error(err.response);

@@ -156,6 +156,8 @@ const StudentList = () => {
       });
       if (response.status === 200) {
         ToastAndroid.show("Attendance Marked Successfully", ToastAndroid.LONG);
+        setIsRefreshing(true);
+        fetchStudents();
       }
     } catch (e) {
       console.error(e);
