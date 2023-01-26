@@ -1,17 +1,16 @@
 import { StyleSheet, View } from 'react-native';
 import React, { FC, Dispatch } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Attendance, Notification } from '../../screens/teacher';
-import TeacherStack from '../teacherStack';
+// import { Attendance, Notification } from '../../screens/teacher';
+import { Allocate, Enroll, Notification } from '../../screens/admin';
 import { colors } from '../../theme';
 import globalStyles from '../../theme/globalStyles';
 import _CustomDrawer from './_CustomDrawer';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { TeacherDrawerParamsList } from '../../types';
 
-const Drawer = createDrawerNavigator<TeacherDrawerParamsList>();
+const Drawer = createDrawerNavigator();
 
 interface TeacherStackProps {}
 
@@ -43,7 +42,7 @@ const TeacherDrawer: FC<TeacherStackProps> = () => {
     >
       <Drawer.Screen
         name="Timetable"
-        component={TeacherStack}
+        component={Enroll}
         options={{
           drawerIcon: ({ size, focused }) => (
             <FontAwesome5 name="table" size={20} color={focused ? colors.white : colors.iconGray} />
@@ -63,7 +62,7 @@ const TeacherDrawer: FC<TeacherStackProps> = () => {
       />
       <Drawer.Screen
         name="Attendance"
-        component={Attendance}
+        component={Allocate}
         options={{
           headerShown: false,
           drawerIcon: ({ size, focused }) => (

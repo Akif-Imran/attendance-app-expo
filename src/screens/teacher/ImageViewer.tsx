@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  Image,
-  ToastAndroid,
-} from "react-native";
+import { StyleSheet, Text, View, FlatList, Image, ToastAndroid } from "react-native";
 import React, { useState } from "react";
 import { useImagesContext } from "../../contexts";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -20,8 +13,7 @@ import { useStudentContext } from "../../contexts/StudentListProvider";
 
 const ImageViewer = () => {
   const route = useRoute<TeacherStackScreenProps<"ImageViewer">["route"]>();
-  const navigation =
-    useNavigation<TeacherStackScreenProps<"ImageViewer">["navigation"]>();
+  const navigation = useNavigation<TeacherStackScreenProps<"ImageViewer">["navigation"]>();
   const { images, setImages } = useImagesContext();
   const [viewImage, setViewImage] = useState({ index: 0, ...images[0] });
   const { students, setStudents } = useStudentContext();
@@ -63,11 +55,12 @@ const ImageViewer = () => {
       console.log("match", match);
       let type = match ? `image/${match[1]}` : `image`;
       console.log("type", type);
+      let photo = image;
 
       formData.append("files", {
         name: filename,
         type: type,
-        uri: image.uri,
+        uri: photo.uri,
       });
     }
 
@@ -140,11 +133,7 @@ const ImageViewer = () => {
                 setViewImage({ index, ...item });
               }}
             >
-              <Image
-                source={{ uri: item.uri }}
-                style={styles.imageStyle}
-                resizeMode="cover"
-              />
+              <Image source={{ uri: item.uri }} style={styles.imageStyle} resizeMode="cover" />
             </TouchableOpacity>
             <View style={styles.deleteContainer}>
               <IconButton

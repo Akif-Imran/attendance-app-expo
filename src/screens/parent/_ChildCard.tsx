@@ -14,8 +14,7 @@ interface _ChildCard {
 
 const _ChildCard: React.FC<_ChildCard> = ({ student }) => {
   const [value, setValue] = useState("present");
-  const navigation =
-    useNavigation<ParentStackScreenProps<"Dashboard">["navigation"]>();
+  const navigation = useNavigation<ParentStackScreenProps<"Dashboard">["navigation"]>();
   return (
     <Card
       elevation={4}
@@ -23,6 +22,20 @@ const _ChildCard: React.FC<_ChildCard> = ({ student }) => {
       onPress={() =>
         navigation.navigate("CoursesList", {
           childName: `${student.firstName} ${student.lastName}`,
+          courses: [
+            {
+              session: "SPRING-2022",
+              course: "CS-808",
+              title: "DSA",
+              percentage: "75.0",
+            },
+            {
+              session: "SPRING-2022",
+              course: "CS-809",
+              title: "COAL",
+              percentage: "72.8",
+            },
+          ],
         })
       }
     >
@@ -33,7 +46,7 @@ const _ChildCard: React.FC<_ChildCard> = ({ student }) => {
         <View style={styles.detailsContainer}>
           <View style={styles.iconWithTextContainer}>
             {/* icons container */}
-            <View style={styles.iconContainer}>
+            {/* <View style={styles.iconContainer}>
               <View style={styles.perIconContainer}>
                 <FontAwesome name="user" size={14} color={colors.iconColor} />
               </View>
@@ -51,10 +64,10 @@ const _ChildCard: React.FC<_ChildCard> = ({ student }) => {
                   color={colors.iconColor}
                 />
               </View>
-            </View>
+            </View> */}
             {/* text container */}
             <View style={styles.studentDetailsTextContainer}>
-              <Text style={styles.cardTitleText}>
+              <Text style={gStyles.cardInfoTitleText}>
                 {student.firstName} {student.lastName}
               </Text>
               <Text style={styles.cardDetailsText}>

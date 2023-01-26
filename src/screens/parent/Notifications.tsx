@@ -5,34 +5,51 @@ import { useNavigation } from "@react-navigation/native";
 import { ParentStackScreenProps, StudentViewAttendanceObject, TeacherStackScreenProps } from "../../types";
 import { colors, gStyles } from "../../theme";
 
-const LecturesList = () => {
-  const data: StudentViewAttendanceObject[] = [
+type StudentAttendanceNotificationObject = StudentViewAttendanceObject & {
+  name: string;
+  courseName: string;
+  courseCode: string;
+};
+const Notifications = () => {
+  const data: StudentAttendanceNotificationObject[] = [
+    // {
+    //   name: "Ahsan Ali",
+    //   courseCode:"CS-808",
+    //   courseName:"DSA",
+    //   heldOnDate: "Monday, January 2, 2023",
+    //   lectureId: 1001,
+    //   attendanceNo: 1,
+    //   status: "present",
+    //   time: "12:39 PM",
+    // },
     {
-      heldOnDate: "Tuesday, December 27, 2022",
-      lectureId: 1001,
-      attendanceNo: 1,
-      status: "present",
-      time: "12:39 PM",
-    },
-    {
-      heldOnDate: "Sunday, January 1, 2023",
-      lectureId: 1007,
-      attendanceNo: 1,
-      status: "present",
-      time: "8:44 PM",
-    },
-    {
-      heldOnDate: "Monday, January 2, 2023",
-      lectureId: 1009,
-      attendanceNo: 1,
-      status: "present",
-      time: "11:39 AM",
-    },
-    {
+      name: "Ahsan Ali",
+      courseCode: "CS-808",
+      courseName: "DSA",
       heldOnDate: "Sunday, January 15, 2023",
       lectureId: 4014,
       attendanceNo: 1,
       status: "absent",
+      time: "1:49 PM",
+    },
+    // {
+    //   name: "Adeel Anjum",
+    //   courseCode:"CS-808",
+    //   courseName:"DSA",
+    //   heldOnDate: "Monday, January 2, 2023",
+    //   lectureId: 1009,
+    //   attendanceNo: 1,
+    //   status: "present",
+    //   time: "11:39 AM",
+    // },
+    {
+      name: "Adeel Anjum",
+      courseCode: "CS-808",
+      courseName: "DSA",
+      heldOnDate: "Sunday, January 15, 2023",
+      lectureId: 4014,
+      attendanceNo: 1,
+      status: "present",
       time: "1:49 PM",
     },
   ];
@@ -41,7 +58,7 @@ const LecturesList = () => {
     <View style={styles.mainContainer}>
       <FlatList
         data={data}
-        renderItem={({ index, item }) => <_LectureCard attendance={item} />}
+        renderItem={({ index, item }) => <_NotificationCard attendance={item} />}
         keyExtractor={(_, index) => index.toString()}
         showsVerticalScrollIndicator={false}
       />
@@ -50,8 +67,8 @@ const LecturesList = () => {
 };
 
 // const images = [bg_Image_1, bg_Image_2, bg_Image_3, bg_Image_4];
-interface _LectureCardProps {
-  attendance: StudentViewAttendanceObject;
+interface _NotificationCardProps {
+  attendance: StudentAttendanceNotificationObject;
 }
 
 const statusColor = {
@@ -59,14 +76,15 @@ const statusColor = {
   absent: colors.error,
 };
 
-const _LectureCard: React.FC<_LectureCardProps> = (props) => {
+const _NotificationCard: React.FC<_NotificationCardProps> = (props) => {
   const navigation = useNavigation<ParentStackScreenProps<"CoursesList">["navigation"]>();
-  const { heldOnDate, status, time } = props.attendance;
+  const { name, heldOnDate, status, time } = props.attendance;
   return (
     <Card style={styles.cardContainer} elevation={2}>
       {/* <Image source={images[2]} style={styles.imageContainer} /> */}
       <View style={styles.coursesDetailsContainer}>
         <View>
+          <Text style={gStyles.cardInfoTitleText}>{name}</Text>
           <Text style={gStyles.cardTitleText}>{heldOnDate}</Text>
           <Text style={gStyles.cardDetailsText}>{time}</Text>
         </View>
@@ -79,7 +97,7 @@ const _LectureCard: React.FC<_LectureCardProps> = (props) => {
   );
 };
 
-export default LecturesList;
+export default Notifications;
 
 const styles = StyleSheet.create({
   mainContainer: {

@@ -1,16 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import {
-  createStackNavigator,
-  StackNavigationOptions,
-} from "@react-navigation/stack";
-import { Login } from "../../screens/auth";
-import TeacherStack from "../teacherStack";
-import TeacherDrawer from "../teacherDrawer";
-import ParentStack from "../parentStack";
-import StudentStack from "../studentStack";
-import { AuthStackParamsList } from "../../types";
-import { useUserContext } from "../../contexts";
+import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack';
+import { Login } from '../../screens/auth';
+import AdminDrawer from '../adminDrawer';
+import TeacherDrawer from '../teacherDrawer';
+import ParentStack from '../parentStack';
+import StudentStack from '../studentStack';
+import { AuthStackParamsList } from '../../types';
+import { useUserContext } from '../../contexts';
 
 const Stack = createStackNavigator<AuthStackParamsList>();
 const AuthStack = () => {
@@ -20,29 +17,40 @@ const AuthStack = () => {
   };
   if (isAuthorized) {
     switch (user?.userType) {
-      case "Teacher": {
+      case 'Teacher': {
         return (
           <Stack.Navigator screenOptions={options}>
             <Stack.Screen name="TeacherDrawer" component={TeacherDrawer} />
           </Stack.Navigator>
         );
       }
-      case "Student": {
+      case 'Student': {
         return (
           <Stack.Navigator screenOptions={options}>
             <Stack.Screen name="StudentStack" component={StudentStack} />
           </Stack.Navigator>
         );
       }
-      case "Parent": {
-        <Stack.Navigator screenOptions={options}>
-          <Stack.Screen name="ParentStack" component={ParentStack} />
-        </Stack.Navigator>;
+      case 'Parent': {
+        return (
+          <Stack.Navigator screenOptions={options}>
+            <Stack.Screen name="ParentStack" component={ParentStack} />
+          </Stack.Navigator>
+        );
+      }
+      case 'Admin': {
+        return (
+          <Stack.Navigator screenOptions={options}>
+            <Stack.Screen name="AdminStack" component={AdminDrawer} />
+          </Stack.Navigator>
+        );
       }
       default:
-        <Stack.Navigator screenOptions={options}>
-          <Stack.Screen name="Login" component={Login} />
-        </Stack.Navigator>;
+        return (
+          <Stack.Navigator screenOptions={options}>
+            <Stack.Screen name="Login" component={Login} />
+          </Stack.Navigator>
+        );
     }
   }
   return (

@@ -1,27 +1,19 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { FC, Dispatch } from "react";
-import {
-  StackNavigationOptions,
-  createStackNavigator,
-} from "@react-navigation/stack";
-import { CoursesList, LecturesList, Notification } from "../../screens/student";
-import {
-  StudentStackDashboardOptionsCallback,
-  StudentStackParamsList,
-  StudentStackScreenProps,
-} from "../../types";
-import { colors } from "../../theme";
-import globalStyles from "../../theme/globalStyles";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useUserContext } from "../../contexts";
+import { StyleSheet, Text, View } from 'react-native';
+import React, { FC, Dispatch } from 'react';
+import { StackNavigationOptions, createStackNavigator } from '@react-navigation/stack';
+import { CoursesList, LecturesList, Notification } from '../../screens/student';
+import { StudentStackDashboardOptionsCallback, StudentStackParamsList, StudentStackScreenProps } from '../../types';
+import { colors } from '../../theme';
+import globalStyles from '../../theme/globalStyles';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useUserContext } from '../../contexts';
 
 const Stack = createStackNavigator<StudentStackParamsList>();
 
-interface StudentStackProps {
-  setAuth: Dispatch<React.SetStateAction<boolean>>;
-}
-const TeacherStack: FC<StudentStackProps> = () => {
+interface StudentStackProps {}
+
+const StudentStack: FC<StudentStackProps> = () => {
   const { setIsAuthorized, setUser } = useUserContext();
 
   const stackNavigatorOptions: StackNavigationOptions = {
@@ -29,16 +21,14 @@ const TeacherStack: FC<StudentStackProps> = () => {
     headerTitleStyle: {
       ...globalStyles.cardTitleText,
       color: colors.white,
-      fontFamily: "Visby-Medium",
+      fontFamily: 'Visby-Medium',
     },
     headerStyle: {
       backgroundColor: colors.primary,
     },
   };
 
-  const optionsDashboardCallback: StudentStackDashboardOptionsCallback = ({
-    navigation,
-  }) => ({
+  const optionsDashboardCallback: StudentStackDashboardOptionsCallback = ({ navigation }) => ({
     headerRight: () => (
       <MaterialCommunityIcons
         name="logout"
@@ -55,7 +45,7 @@ const TeacherStack: FC<StudentStackProps> = () => {
         name="notifications"
         size={20}
         color={colors.white}
-        onPress={() => navigation.navigate("Notification")}
+        onPress={() => navigation.navigate('Notification')}
       />
     ),
     headerRightContainerStyle: {
@@ -68,16 +58,12 @@ const TeacherStack: FC<StudentStackProps> = () => {
 
   return (
     <Stack.Navigator screenOptions={stackNavigatorOptions}>
-      <Stack.Screen
-        name="Dashboard"
-        component={CoursesList}
-        options={optionsDashboardCallback}
-      />
+      <Stack.Screen name="Dashboard" component={CoursesList} options={optionsDashboardCallback} />
       <Stack.Screen
         name="LectureList"
         component={LecturesList}
         options={({ route }) => ({
-          title: `${route.params.courseCode}-${route.params.courseName}`,
+          title: `${route.params.courseCode} ${route.params.courseName}`,
         })}
       />
       <Stack.Screen name="Notification" component={Notification} />
@@ -85,6 +71,6 @@ const TeacherStack: FC<StudentStackProps> = () => {
   );
 };
 
-export default TeacherStack;
+export default StudentStack;
 
 const styles = StyleSheet.create({});

@@ -1,18 +1,7 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Platform } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import type {
-  ApiTimetableSession,
-  ApiTimetableSessionByDay,
-  TeacherStackScreenProps,
-} from "../../types";
+import type { ApiTimetableSession, ApiTimetableSessionByDay, TeacherStackScreenProps } from "../../types";
 import { Button, Card } from "react-native-paper";
 import globalStyles from "../../theme/globalStyles";
 import { colors } from "../../theme";
@@ -21,30 +10,24 @@ import { api } from "../../helpers";
 import { useUserContext } from "../../contexts";
 
 const Dashboard = () => {
-  const navigation =
-    useNavigation<TeacherStackScreenProps<"Dashboard">["navigation"]>();
+  const navigation = useNavigation<TeacherStackScreenProps<"Dashboard">["navigation"]>();
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-  const [ApiTimetable, setApiTimetable] =
-    useState<Array<ApiTimetableSessionByDay>>();
+  const [ApiTimetable, setApiTimetable] = useState<Array<ApiTimetableSessionByDay>>();
   const { user } = useUserContext();
 
   useEffect(() => {
     if (!user) return;
     const fetchTimetables = async () => {
-      const response = await api.get(
-        `/teacher/get-teacher-timetable/${user.id}`
-      );
+      const response = await api.get(`/teacher/get-teacher-timetable/${user.id}`);
       if (response.status === 200) {
         const apiData: Array<ApiTimetableSessionByDay> = response.data;
         console.log(apiData);
         setApiTimetable(apiData);
       }
     };
-    fetchTimetables().catch((error) =>
-      console.error("Teacher-Dashboard: Timetable")
-    );
+    fetchTimetables().catch((error) => console.error("Teacher-Dashboard: Timetable"));
   }, [user]);
 
   const onChange = (event, selectedDate) => {
@@ -132,16 +115,12 @@ interface RenderCardProps {
   sessions: Array<ApiTimetableSession>;
 }
 const RenderCard: React.FC<RenderCardProps> = ({ sessions }) => {
-  const navigation =
-    useNavigation<TeacherStackScreenProps<"Dashboard">["navigation"]>();
+  const navigation = useNavigation<TeacherStackScreenProps<"Dashboard">["navigation"]>();
   return (
     <>
       {sessions.map((value, index) => (
         <TouchableOpacity
-          style={[
-            styles.detailsContainer,
-            sessions.length === index + 1 ? null : styles.classSeparator,
-          ]}
+          style={[styles.detailsContainer, sessions.length === index + 1 ? null : styles.classSeparator]}
           key={index}
           onPress={() =>
             navigation.navigate("StudentList", {
@@ -173,8 +152,7 @@ const RenderCard: React.FC<RenderCardProps> = ({ sessions }) => {
             <View style={styles.text}>
               <Text style={styles.subjectText}>{value.subject}</Text>
               <Text style={styles.classVenueText}>
-                {value.class} |{" "}
-                <Text style={styles.classVenueText}>{value.venue}</Text>
+                {value.class} | <Text style={styles.classVenueText}>{value.venue}</Text>
               </Text>
             </View>
           </View>
@@ -288,7 +266,7 @@ const styles = StyleSheet.create({
     fontFamily: "Visby-Medium",
     textAlign: "center",
     textAlignVertical: "center",
-    paddingHorizontal: 10,
+    paddingHorizontal: 6,
     fontSize: 14,
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
@@ -304,7 +282,7 @@ const styles = StyleSheet.create({
     fontFamily: "Visby-Medium",
     textAlign: "center",
     textAlignVertical: "center",
-    paddingHorizontal: 10,
+    paddingHorizontal: 6,
     fontSize: 14,
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,

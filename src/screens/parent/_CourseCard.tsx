@@ -6,8 +6,7 @@ import { ParentStackScreenProps, TeacherStackScreenProps } from "../../types";
 import { colors, gStyles } from "../../theme";
 
 const _CourseCard = (props) => {
-  const navigation =
-    useNavigation<ParentStackScreenProps<"CoursesList">["navigation"]>();
+  const navigation = useNavigation<ParentStackScreenProps<"CoursesList">["navigation"]>();
   const { session, course, title, percentage } = props.course;
 
   const getColor = (percentage: string) => {
@@ -19,20 +18,19 @@ const _CourseCard = (props) => {
     <Card
       style={styles.mainContainer}
       elevation={3}
-      onPress={() => navigation.navigate("LectureList", { courseName: course })}
+      onPress={() =>
+        navigation.navigate("LectureList", {
+          courseCode: course,
+          courseName: title,
+        })
+      }
     >
       <View style={styles.coursesDetailsContainer}>
+        <Text style={gStyles.cardInfoTitleText}>{title}</Text>
         <View style={styles.courseWithPercentage}>
-          <Text
-            style={gStyles.cardDetailsText}
-          >{`${session} | ${course}`}</Text>
-          <Text
-            style={[styles.courseDetailsText, { color: getColor(percentage) }]}
-          >
-            {percentage}%
-          </Text>
+          <Text style={gStyles.cardDetailsText}>{`${session} | ${course}`}</Text>
+          <Text style={[styles.courseDetailsText, { color: getColor(percentage) }]}>{percentage}%</Text>
         </View>
-        <Text style={gStyles.cardTitleText}>{title}</Text>
       </View>
     </Card>
   );
@@ -81,3 +79,4 @@ const styles = StyleSheet.create({
     color: "#757575",
   },
 });
+

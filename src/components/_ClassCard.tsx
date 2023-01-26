@@ -6,6 +6,7 @@ import { gStyles } from "../theme";
 import { _Button } from "./general";
 import { useNavigation } from "@react-navigation/native";
 import {
+  TeacherAttendanceStackScreenProps,
   TeacherStackScreenProps,
   TeacherTaughtClassesClass,
   TeacherTaughtClassesLecture,
@@ -16,14 +17,18 @@ interface _ClassCardProps {
 }
 
 const _ClassCard: FC<_ClassCardProps> = ({ item }) => {
-  const navigation = useNavigation<any>();
-
+  const navigation = useNavigation<TeacherAttendanceStackScreenProps<"ClassesList">["navigation"]>();
   const lastClass: TeacherTaughtClassesLecture | undefined =
-    item.lectures.length !== 0
-      ? item.lectures[item.lectures.length - 1]
-      : undefined;
+    item.lectures.length !== 0 ? item.lectures[item.lectures.length - 1] : undefined;
   return (
-    <Card style={styles.mainCardContainer} onPress={() => {}}>
+    <Card
+      style={styles.mainCardContainer}
+      onPress={() =>
+        navigation.navigate("LectureList", {
+          item,
+        })
+      }
+    >
       <View style={styles.mainContainer}>
         {/* <View style={styles.iconContainer}>
           <Image
@@ -36,12 +41,8 @@ const _ClassCard: FC<_ClassCardProps> = ({ item }) => {
           <Text style={gStyles.cardInfoTitleText}>
             {item.className} {item.courseName}
           </Text>
-          <Text style={gStyles.cardDetailsText}>
-            Last Class {lastClass ? lastClass.heldOnDate : "NA"}
-          </Text>
-          <Text style={gStyles.cardDetailsText}>
-            {item.lectures.length} classes conducted.
-          </Text>
+          <Text style={gStyles.cardDetailsText}>Last Class {lastClass ? lastClass.heldOnDate : "NA"}</Text>
+          <Text style={gStyles.cardDetailsText}>{item.lectures.length} classes conducted.</Text>
           <View style={styles.buttonContainer}>
             {/* <View style={styles.individualButtonContainer}>
               <_Button

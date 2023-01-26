@@ -8,25 +8,19 @@ import globalStyles from "../../theme/globalStyles";
 
 const students = [
   {
-    regNo: "19-ARID-0069",
+    regNo: "2019-ARID-0001",
     firstName: "Ahsan",
     lastName: "Ali",
-    class: "BSCS-7A",
+    class: "BSCS-8A",
     img: require("../../assets/images/ImagesAttendance/Ahsan-Ali.jpg"),
   },
   {
-    regNo: "19-ARID-0082",
+    regNo: "2019-ARID-0002",
     firstName: "Adeel",
-    lastName: "Ali",
-    class: "BSCS-7B",
+    lastName: "Anjum",
+    class: "BSCS-8A",
     img: require("../../assets/images/ImagesAttendance/Adeel-Anjum.jpg"),
   },
-  // {
-  //   regNo: "19-ARID-0099",
-  //   firstName: "Mira",
-  //   lastName: "Ali",
-  //   class: "BSCS-7A",
-  // },
 ];
 const StudentList = () => {
   return (

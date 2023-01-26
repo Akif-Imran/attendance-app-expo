@@ -1,11 +1,15 @@
-import type { StackNavigationOptions, StackScreenProps } from "@react-navigation/stack";
+import type { StackNavigationOptions, StackScreenProps } from '@react-navigation/stack';
+import { NavigatorScreenParams } from '@react-navigation/native';
+import { DrawerScreenProps } from '@react-navigation/drawer';
 export type AuthStackParamsList = {
-    TeacherDrawer: undefined;
-    ParentStack: undefined;
-    StudentStack: undefined;
+    TeacherDrawer: NavigatorScreenParams<TeacherDrawerParamsList>;
+    StudentStack: NavigatorScreenParams<StudentStackParamsList>;
+    ParentStack: NavigatorScreenParams<ParentStackParamsList>;
+    AdminStack: NavigatorScreenParams<AdminStackParamsList>;
     Login: undefined;
 };
-//teacherStacks
+
+// mark attendance Stack
 export type TeacherStackParamsList = {
     Dashboard: undefined;
     // CoursesList: undefined;
@@ -26,24 +30,75 @@ export type TeacherStackParamsList = {
         attendances: {
             regNo: string;
             status: string;
-        }[],
+        }[];
     };
-    Notification: undefined;
     StudentList: {
         class: string;
         course: string;
         slot: number;
         venue: string;
     };
+    Notification: undefined;
 };
+// attendance view and update stack
+export type TeacherAttendanceStackParamsList = {
+    ClassesList: undefined;
+    LectureList: {
+        item: TeacherTaughtClassesClass;
+    };
+    UpdateStudentList: {
+        item: TeacherTaughtClassesClass;
+        lectureNo: number;
+    };
+    ImageViewer: {
+        teacherId: number | undefined;
+        courseName: string;
+        className: string;
+        venue: string;
+        slot: number;
+        jsonDate: string;
+        Session: string;
+        attendances: {
+            regNo: string;
+            status: string;
+        }[];
+    };
+};
+// teacher drawer
+export type TeacherDrawerParamsList = {
+    Timetable: NavigatorScreenParams<TeacherStackParamsList>;
+    Notifications: undefined;
+    Attendance: NavigatorScreenParams<TeacherAttendanceStackParamsList>;
+};
+export type TeacherAttendanceStackScreenProps<T extends keyof TeacherAttendanceStackParamsList> = StackScreenProps<
+    TeacherAttendanceStackParamsList,
+    T
+>;
+export type TeacherDrawerScreenProps<T extends keyof TeacherDrawerParamsList> = DrawerScreenProps<
+    TeacherDrawerParamsList,
+    T
+>;
+export type TeacherStackScreenProps<T extends keyof TeacherStackParamsList> = StackScreenProps<
+    TeacherStackParamsList,
+    T
+>;
+
 export type ParentStackParamsList = {
     Dashboard: undefined;
     CoursesList: {
         childName: string;
+        courses: {
+            session: string;
+            course: string;
+            title: string;
+            percentage: string;
+        }[];
     };
     LectureList: {
+        courseCode: string;
         courseName: string;
     };
+    Notifications: undefined;
 };
 
 export type StudentStackParamsList = {
@@ -55,21 +110,25 @@ export type StudentStackParamsList = {
     };
     Notification: undefined;
 };
-export type StudentStackDashboardOptionsCallback =
-    (props: {
-        navigation: StudentStackScreenProps<"Dashboard">["navigation"],
-        route: StudentStackScreenProps<"Dashboard">["route"]
-    }) => StackNavigationOptions;
-//#region teacher screens
-type CoursesListProps = StackScreenProps<TeacherStackParamsList, "CoursesList">;
-export type TeacherStackScreenProps<T extends keyof TeacherStackParamsList> =
-    StackScreenProps<TeacherStackParamsList, T>;
-export type ParentStackScreenProps<T extends keyof ParentStackParamsList> =
-    StackScreenProps<ParentStackParamsList, T>;
-export type StudentStackScreenProps<T extends keyof StudentStackParamsList> =
-    StackScreenProps<StudentStackParamsList, T>;
+export type AdminStackParamsList = {
+    Enroll: undefined;
+    Allocate: undefined;
+    Notifications: undefined;
+};
 
-export type ApiUserType = "Student" | "Admin" | "Parent" | "Teacher";
+export type StudentStackDashboardOptionsCallback = (props: {
+    navigation: StudentStackScreenProps<'Dashboard'>['navigation'];
+    route: StudentStackScreenProps<'Dashboard'>['route'];
+}) => StackNavigationOptions;
+//#region teacher screens
+// type CoursesProps = StackScreenProps<TeacherStackParamsList, 'Dashboard'>;
+export type ParentStackScreenProps<T extends keyof ParentStackParamsList> = StackScreenProps<ParentStackParamsList, T>;
+export type StudentStackScreenProps<T extends keyof StudentStackParamsList> = StackScreenProps<StudentStackParamsList, T>;
+export type AdminStackScreenProps<T extends keyof AdminStackParamsList> = StackScreenProps<AdminStackParamsList, T>;
+
+
+
+export type ApiUserType = 'Student' | 'Admin' | 'Parent' | 'Teacher';
 
 export type ApiLoginResponseUser = {
     id: number;
@@ -121,24 +180,19 @@ export type ApiStudentObject = {
     presentCount: number;
     latestAttendanceStatus: AttendanceStatus;
 };
-export type AttendanceStatus = "present" | "absent";
-export type ChangeStatusCallbackType = (
-    regNo: string,
-    status: AttendanceStatus
-) => void;
+export type AttendanceStatus = 'present' | 'absent';
+export type ChangeStatusCallbackType = (regNo: string, status: AttendanceStatus) => void;
 //#endregion
 export type UserContextType = {
     user: ApiLoginResponseUser | undefined;
-    setUser: React.Dispatch<
-        React.SetStateAction<ApiLoginResponseUser | undefined>
-    >;
+    setUser: React.Dispatch<React.SetStateAction<ApiLoginResponseUser | undefined>>;
     isAuthorized: boolean;
     setIsAuthorized: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export type StudentContextType = {
     students: ApiStudentsByClass;
     setStudents: React.Dispatch<React.SetStateAction<ApiStudentsByClass>>;
-}
+};
 
 //#region StudentStack
 
@@ -163,7 +217,7 @@ export type ApiCourseList = ApiCourseWithAttendances[];
 export type AttendanceWithRegNo = {
     status: AttendanceStatus;
     regNo: string;
-}
+};
 export type AttendancesWithRegNo = AttendanceWithRegNo[];
 
 export type TeacherTaughtClassesLecture = {
@@ -172,7 +226,7 @@ export type TeacherTaughtClassesLecture = {
     session: string;
     venue: string;
     heldOnDate: string;
-}
+};
 export type TeacherTaughtClassesClass = {
     teacherId: number;
     courseCode: string;
@@ -181,5 +235,9 @@ export type TeacherTaughtClassesClass = {
     classId: number;
     className: string;
     lectures: TeacherTaughtClassesLecture[];
-}
+};
 export type TeacherTaughtClassesResponse = TeacherTaughtClassesClass[];
+export type UpdateStudentListType = {
+    attendances: ApiStudentsByClass;
+    lectureImages: string[];
+};

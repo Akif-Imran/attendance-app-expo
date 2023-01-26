@@ -1,17 +1,18 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import _ClassCard from "../../components/_ClassCard";
 import { api } from "../../helpers";
 import { session } from "../../helpers/api";
 import { useUserContext } from "../../contexts";
 import { TeacherTaughtClassesResponse } from "../../types";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ClassesList = () => {
-  //get teacher credentails from context api
+  //get teacher credentials from context api
   const { user } = useUserContext();
   const [data, setData] = useState<TeacherTaughtClassesResponse>([]);
 
-  useEffect(() => {
+  const memoFetch = useCallback(() => {
     api
       .get(
         `/Teacher/get-teacher-classes?teacherId=${user?.id}&session=${session}`
@@ -19,14 +20,17 @@ const ClassesList = () => {
       .then((res) => {
         if (res.status === 200) {
           const resData: TeacherTaughtClassesResponse = res.data;
-          console.log(resData);
+          // console.log(resData);
           setData(resData);
         }
       })
       .catch((err) => {
         console.log("error occurred");
       });
-  }, []);
+  }, [user?.id, session]);
+
+  useFocusEffect(memoFetch);
+
   return (
     <View style={styles.mainContainer}>
       <FlatList

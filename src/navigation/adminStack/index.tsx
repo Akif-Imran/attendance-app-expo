@@ -1,20 +1,35 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { FC } from 'react';
+import { StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import React, { FC, Dispatch, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ImageViewer, Notification, Dashboard, StudentList } from '../../screens/teacher';
-import { TeacherDrawerScreenProps, TeacherStackParamsList } from '../../types';
+import {
+  Attendance,
+  ImageViewer,
+  ClassesList,
+  CoursesList,
+  Notification,
+  Dashboard,
+  StudentList,
+} from '../../screens/teacher';
+import { TeacherStackParamsList } from '../../types';
 import { colors } from '../../theme';
 import globalStyles from '../../theme/globalStyles';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import * as ImagePicker from 'expo-image-picker';
+import type { ImagePickerResult, ImagePickerMultipleResult } from 'expo-image-picker';
+import { Camera, CameraType } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
+import { useImagesContext } from '../../contexts';
 
 const Stack = createStackNavigator<TeacherStackParamsList>();
 
-interface TeacherStackProps {}
+interface TeacherStackProps {
+  setAuth: Dispatch<React.SetStateAction<boolean>>;
+}
 
-const TeacherStack: FC<TeacherStackProps> = (props: TeacherStackProps) => {
-  const drawerNav = useNavigation<TeacherDrawerScreenProps<'Timetable'>['navigation']>();
+const TeacherStack: FC<TeacherStackProps> = () => {
+  const drawerNav = useNavigation();
 
   return (
     <Stack.Navigator

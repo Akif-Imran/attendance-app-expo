@@ -1,19 +1,14 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Alert } from "react-native";
+import React, { useLayoutEffect } from "react";
 import { Card } from "react-native-paper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   ParentStackScreenProps,
   StudentStackScreenProps,
   StudentViewAttendanceObject,
+  TeacherAttendanceStackScreenProps,
   TeacherStackScreenProps,
+  TeacherTaughtClassesClass,
   TeacherTaughtClassesLecture,
 } from "../../types";
 import { colors, gStyles } from "../../theme";
@@ -22,14 +17,19 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 interface LecturesListProps {}
 
 const LecturesList: React.FC<LecturesListProps> = () => {
-  const route = useRoute<any>();
-  const data: TeacherTaughtClassesLecture[] = route.params.attendances;
+  const route = useRoute<TeacherAttendanceStackScreenProps<"LectureList">["route"]>();
+  const navigation = useNavigation<TeacherAttendanceStackScreenProps<"LectureList">["navigation"]>();
+  const data: TeacherTaughtClassesLecture[] = route.params.item.lectures;
 
+  useLayoutEffect(() => {
+    navigation.setOptions({});
+    return () => {};
+  }, []);
   return (
     <View style={styles.mainContainer}>
       <FlatList
         data={data}
-        renderItem={({ index, item }) => <_LectureCard attendance={item} />}
+        renderItem={({ index, item }) => <_LectureCard lecture={item} index={index} classDetails={route.params.item} />}
         keyExtractor={(_, index) => index.toString()}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
@@ -42,9 +42,10 @@ const LecturesList: React.FC<LecturesListProps> = () => {
   );
 };
 
-// const images = [bg_Image_1, bg_Image_2, bg_Image_3, bg_Image_4];
 interface _LectureCardProps {
-  attendance: StudentViewAttendanceObject;
+  lecture: TeacherTaughtClassesLecture;
+  classDetails: TeacherTaughtClassesClass;
+  index: number;
 }
 
 const statusColor = {
@@ -52,38 +53,27 @@ const statusColor = {
   absent: colors.error,
 };
 
-const _LectureCard: React.FC<_LectureCardProps> = ({ attendance }) => {
-  const navigation =
-    useNavigation<ParentStackScreenProps<"CoursesList">["navigation"]>();
-  const { heldOnDate, status, time } = attendance;
+const _LectureCard: React.FC<_LectureCardProps> = ({ lecture, classDetails, index }) => {
+  const navigation = useNavigation<TeacherAttendanceStackScreenProps<"LectureList">["navigation"]>();
+  const { heldOnDate, venue, lectureSlotId, id, session } = lecture;
 
-  const handleChallenge = () => {
-    Alert.alert(
-      "Challenge Attendance!",
-      "Are you sure?", // <- this part is optional, you can pass an empty string
-      [
-        {
-          text: "Challenge",
-          onPress: () => console.log("OK Pressed"),
-          style: "default",
-        },
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
   return (
-    <Card style={styles.cardContainer} elevation={2} onPress={handleChallenge}>
+    <Card
+      style={styles.cardContainer}
+      elevation={2}
+      onPress={() => {
+        navigation.navigate("UpdateStudentList", {
+          item: classDetails,
+          lectureNo: index,
+        });
+      }}
+    >
       {/* <Image source={images[2]} style={styles.imageContainer} /> */}
       <View style={styles.coursesDetailsContainer}>
         {/* date and time */}
         <View style={styles.infoContainer}>
           <Text style={gStyles.cardTitleText}>{heldOnDate}</Text>
-          <Text style={gStyles.cardDetailsText}>{time}</Text>
+          <Text style={gStyles.cardDetailsText}>{venue}</Text>
         </View>
         {/* challenge button */}
         {/* <TouchableOpacity
@@ -95,11 +85,7 @@ const _LectureCard: React.FC<_LectureCardProps> = ({ attendance }) => {
 
         {/* attendance status */}
         <View style={styles.statusContainer}>
-          <Text
-            style={[styles.courseDetailsText, { color: statusColor[status] }]}
-          >
-            {status}
-          </Text>
+          <Text style={[styles.courseDetailsText]}>Slot {lectureSlotId}</Text>
         </View>
       </View>
     </Card>

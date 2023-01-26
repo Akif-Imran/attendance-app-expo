@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import registerNNPushToken from "native-notify";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useColorScheme, View } from "react-native";
 import { colors } from "./src/theme";
@@ -10,11 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { Provider } from "react-native-paper";
 
-import {
-  NavigationContainer,
-  DarkTheme,
-  DefaultTheme,
-} from "@react-navigation/native";
+import { NavigationContainer, DarkTheme, DefaultTheme } from "@react-navigation/native";
 
 import MainApp from "./src";
 import { ImagesProvider, StudentListProvider } from "./src/contexts";
@@ -23,6 +20,8 @@ import { AuthProvider } from "./src/contexts";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  registerNNPushToken(5805, "eZaL4jeqvmkjzmezdyMZ3i");
+
   const scheme = useColorScheme();
   const [isAppReady, setIsAppReady] = useState<boolean>(false);
 
@@ -60,9 +59,7 @@ export default function App() {
       <RootSiblingParent>
         <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
           <StatusBar backgroundColor={colors.primary} style="light" />
-          <NavigationContainer
-            theme={scheme === "dark" ? DarkTheme : DefaultTheme}
-          >
+          <NavigationContainer theme={scheme === "dark" ? DarkTheme : DefaultTheme}>
             <Provider>
               <ImagesProvider>
                 <AuthProvider>
