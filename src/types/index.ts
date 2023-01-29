@@ -5,7 +5,7 @@ export type AuthStackParamsList = {
     TeacherDrawer: NavigatorScreenParams<TeacherDrawerParamsList>;
     StudentStack: NavigatorScreenParams<StudentStackParamsList>;
     ParentStack: NavigatorScreenParams<ParentStackParamsList>;
-    AdminStack: NavigatorScreenParams<AdminStackParamsList>;
+    AdminStack: NavigatorScreenParams<AdminDrawerParamsList>;
     Login: undefined;
 };
 
@@ -110,7 +110,7 @@ export type StudentStackParamsList = {
     };
     Notification: undefined;
 };
-export type AdminStackParamsList = {
+export type AdminDrawerParamsList = {
     Enroll: undefined;
     Allocate: undefined;
     Notifications: undefined;
@@ -124,7 +124,7 @@ export type StudentStackDashboardOptionsCallback = (props: {
 // type CoursesProps = StackScreenProps<TeacherStackParamsList, 'Dashboard'>;
 export type ParentStackScreenProps<T extends keyof ParentStackParamsList> = StackScreenProps<ParentStackParamsList, T>;
 export type StudentStackScreenProps<T extends keyof StudentStackParamsList> = StackScreenProps<StudentStackParamsList, T>;
-export type AdminStackScreenProps<T extends keyof AdminStackParamsList> = StackScreenProps<AdminStackParamsList, T>;
+export type AdminStackScreenProps<T extends keyof AdminDrawerParamsList> = StackScreenProps<AdminDrawerParamsList, T>;
 
 
 

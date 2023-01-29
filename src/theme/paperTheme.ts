@@ -1,8 +1,9 @@
 import { colors } from './colors'
+import type { Theme, Font } from 'react-native-paper'
 
 
-export const PaperTheme = {
-    roundness: 15,
+export const PaperTheme: Theme = {
+    roundness: 8,
     fonts: {
         thin: {
             fontFamily: "Visby-Regular",
@@ -15,9 +16,13 @@ export const PaperTheme = {
         },
     },
     colors: {
-        text: colors.qtyTextGray,
-        placeholder: colors.qtyTextGray,
+        text: colors.titleText,
+        placeholder: colors.textGray,
         primary: colors.primary,
         notification: colors.secondary,
+        error: colors.error,
+        accent: colors.darkGray
+
+
     },
 };

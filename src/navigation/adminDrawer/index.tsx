@@ -9,12 +9,17 @@ import _CustomDrawer from './_CustomDrawer';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useUserContext } from '../../contexts';
+import { AdminDrawerParamsList } from '../../types';
 
-const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator<AdminDrawerParamsList>();
 
-interface TeacherStackProps {}
+interface AdminDrawerProps {}
 
-const TeacherDrawer: FC<TeacherStackProps> = () => {
+const AdminDrawer: FC<AdminDrawerProps> = () => {
+  const { setIsAuthorized, setUser } = useUserContext();
+
   return (
     <Drawer.Navigator
       drawerContent={(props) => <_CustomDrawer {...props} />}
@@ -41,13 +46,23 @@ const TeacherDrawer: FC<TeacherStackProps> = () => {
       }}
     >
       <Drawer.Screen
-        name="Timetable"
+        name="Enroll"
         component={Enroll}
         options={{
+          headerShown: true,
           drawerIcon: ({ size, focused }) => (
-            <FontAwesome5 name="table" size={20} color={focused ? colors.white : colors.iconGray} />
+            <FontAwesome5 name="user-plus" size={20} color={focused ? colors.white : colors.iconGray} />
           ),
-          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="Allocate"
+        component={Allocate}
+        options={{
+          headerShown: true,
+          drawerIcon: ({ size, focused }) => (
+            <MaterialIcons name="assignment-turned-in" size={20} color={focused ? colors.white : colors.iconGray} />
+          ),
         }}
       />
       <Drawer.Screen
@@ -57,16 +72,6 @@ const TeacherDrawer: FC<TeacherStackProps> = () => {
           title: 'Notifications',
           drawerIcon: ({ size, focused }) => (
             <Ionicons name="notifications" size={20} color={focused ? colors.white : colors.iconGray} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Attendance"
-        component={Allocate}
-        options={{
-          headerShown: false,
-          drawerIcon: ({ size, focused }) => (
-            <Ionicons name="list" size={20} color={focused ? colors.white : colors.iconGray} />
           ),
         }}
       />
@@ -84,7 +89,7 @@ const AttendanceLeftButtons = () => {
   );
 };
 
-export default TeacherDrawer;
+export default AdminDrawer;
 
 const styles = StyleSheet.create({
   iconContainer: {
