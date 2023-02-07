@@ -2,14 +2,15 @@ import { StyleSheet, View } from 'react-native';
 import React, { FC, Dispatch } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 // import { Attendance, Notification } from '../../screens/teacher';
-import { Allocate, Enroll, Notification } from '../../screens/admin';
+import { Allocate, Notification } from '../../screens/admin';
+import EnrollStack from '../adminEnrollStack';
 import { colors } from '../../theme';
 import globalStyles from '../../theme/globalStyles';
 import _CustomDrawer from './_CustomDrawer';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useUserContext } from '../../contexts';
 import { AdminDrawerParamsList } from '../../types';
 
@@ -46,10 +47,11 @@ const AdminDrawer: FC<AdminDrawerProps> = () => {
       }}
     >
       <Drawer.Screen
-        name="Enroll"
-        component={Enroll}
+        name="EnrollStack"
+        component={EnrollStack}
         options={{
           headerShown: true,
+          title: 'Enroll',
           drawerIcon: ({ size, focused }) => (
             <FontAwesome5 name="user-plus" size={20} color={focused ? colors.white : colors.iconGray} />
           ),

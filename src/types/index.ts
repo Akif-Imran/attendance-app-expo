@@ -1,6 +1,7 @@
 import type { StackNavigationOptions, StackScreenProps } from '@react-navigation/stack';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import { DrawerScreenProps } from '@react-navigation/drawer';
+import { ImageInfo } from 'expo-image-picker';
 export type AuthStackParamsList = {
     TeacherDrawer: NavigatorScreenParams<TeacherDrawerParamsList>;
     StudentStack: NavigatorScreenParams<StudentStackParamsList>;
@@ -111,10 +112,16 @@ export type StudentStackParamsList = {
     Notification: undefined;
 };
 export type AdminDrawerParamsList = {
-    Enroll: undefined;
+    EnrollStack: NavigatorScreenParams<EnrollmentStackParamsList>;
     Allocate: undefined;
     Notifications: undefined;
 };
+
+export type EnrollmentStackParamsList = {
+    Enroll: undefined;
+    AddStudent: undefined;
+    Enrollment: undefined;
+}
 
 export type StudentStackDashboardOptionsCallback = (props: {
     navigation: StudentStackScreenProps<'Dashboard'>['navigation'];
@@ -125,6 +132,7 @@ export type StudentStackDashboardOptionsCallback = (props: {
 export type ParentStackScreenProps<T extends keyof ParentStackParamsList> = StackScreenProps<ParentStackParamsList, T>;
 export type StudentStackScreenProps<T extends keyof StudentStackParamsList> = StackScreenProps<StudentStackParamsList, T>;
 export type AdminStackScreenProps<T extends keyof AdminDrawerParamsList> = StackScreenProps<AdminDrawerParamsList, T>;
+export type EnrollmentStackScreenProps<T extends keyof EnrollmentStackParamsList> = StackScreenProps<EnrollmentStackParamsList, T>;
 
 
 
@@ -241,3 +249,9 @@ export type UpdateStudentListType = {
     attendances: ApiStudentsByClass;
     lectureImages: string[];
 };
+
+export type Pose = 'Front' | 'Left' | 'Right';
+interface PoseObj {
+    pose: Pose;
+}
+export type Features = ImageInfo & PoseObj;
