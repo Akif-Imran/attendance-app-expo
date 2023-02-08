@@ -35,7 +35,7 @@ const Enroll = () => {
         </View>
       </Card>
 
-      <Card style={styles.card} onPress={() => navigation.navigate('Enrollment')} elevation={4}>
+      <Card style={styles.card} onPress={() => navigation.navigate('Search')} elevation={4}>
         <View
           style={{
             flexDirection: 'row',

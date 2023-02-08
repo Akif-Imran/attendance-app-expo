@@ -120,7 +120,10 @@ export type AdminDrawerParamsList = {
 export type EnrollmentStackParamsList = {
     Enroll: undefined;
     AddStudent: undefined;
-    Enrollment: undefined;
+    Enrollment: {
+        data: ApiStudentObject
+    };
+    Search: undefined;
 }
 
 export type StudentStackDashboardOptionsCallback = (props: {
@@ -169,9 +172,9 @@ export type ApiTimetableSession = {
     stop: string;
     slot: number;
 };
-export type ApiStudentsByClass = ApiStudentObject[];
+export type ApiStudentsByClass = ApiStudentWithAttendancePercentageObject[];
 
-export type ApiStudentObject = {
+export type ApiStudentWithAttendancePercentageObject = {
     id: number;
     regno: string;
     firstName: string;
@@ -187,6 +190,19 @@ export type ApiStudentObject = {
     lectureCount: number;
     presentCount: number;
     latestAttendanceStatus: AttendanceStatus;
+};
+export type ApiStudentObject = {
+    id: number;
+    regno: string;
+    firstName: string;
+    lastName: string;
+    semester: number;
+    discipline: string;
+    degree: string;
+    section: string;
+    classId: number;
+    parentId: number;
+    imageURL: string;
 };
 export type AttendanceStatus = 'present' | 'absent';
 export type ChangeStatusCallbackType = (regNo: string, status: AttendanceStatus) => void;

@@ -1,27 +1,24 @@
 import { StyleSheet, Text, View, Image, Switch } from 'react-native';
 import React, { useState } from 'react';
 import { Card, RadioButton, ToggleButton } from 'react-native-paper';
-import { colors, gStyles, PaperTheme } from '../theme';
+import { colors, gStyles, PaperTheme } from '../../theme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import globalStyles from '../theme/globalStyles';
+import globalStyles from '../../theme/globalStyles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ApiStudentWithAttendancePercentageObject, ChangeStatusCallbackType } from '../types';
+import {
+  ApiStudentWithAttendancePercentageObject,
+  ChangeStatusCallbackType,
+  ApiStudentObject,
+  EnrollmentStackScreenProps,
+} from '../../types';
+import { useNavigation } from '@react-navigation/native';
 
 interface _StudentCard {
-  student: ApiStudentWithAttendancePercentageObject;
-  changeStatus: ChangeStatusCallbackType;
+  student: ApiStudentObject;
 }
 
-const _StudentCard: React.FC<_StudentCard> = ({ student, changeStatus }) => {
-  const [isPresent, setIsPresent] = useState<boolean>(Boolean(student.status === 'present'));
-
-  const percentage = (student.presentCount / student.lectureCount) * 100 || 0;
-
-  const toggleStatus = () => {
-    changeStatus(student.regno, student.status === 'present' ? 'absent' : 'present');
-    setIsPresent((previousState) => !previousState);
-  };
-
+const _StudentCard: React.FC<_StudentCard> = ({ student }) => {
+  const navigation = useNavigation<EnrollmentStackScreenProps<'Search'>['navigation']>();
   const getColor = (percentage: string) => {
     const percent = parseInt(percentage);
     if (percent < 75) return colors.error;
@@ -29,7 +26,15 @@ const _StudentCard: React.FC<_StudentCard> = ({ student, changeStatus }) => {
   };
 
   return (
-    <Card elevation={4} style={styles.mainContainer}>
+    <Card
+      elevation={4}
+      style={styles.mainContainer}
+      onPress={() =>
+        navigation.navigate('Enrollment', {
+          data: student,
+        })
+      }
+    >
       <View style={styles.contentContainer}>
         <View style={styles.imageContainer}>
           <Image source={{ uri: student.imageURL }} style={styles.imageStyle} />
@@ -58,34 +63,39 @@ const _StudentCard: React.FC<_StudentCard> = ({ student, changeStatus }) => {
                 {student.firstName} {student.lastName}
               </Text>
               <Text style={styles.cardDetailsText}>{student.regno}</Text>
+              <Text style={styles.cardDetailsText}>
+                {student.degree}
+                {student.discipline}
+              </Text>
+              <Text style={styles.cardDetailsText}>{student.semester}</Text>
             </View>
-            <View>
+            {/* <View>
               <Text style={[styles.courseDetailsText, { color: getColor(percentage.toFixed(1)) }]}>
                 {percentage.toFixed(1)} %
               </Text>
-            </View>
+            </View> */}
           </View>
           {/* status container */}
-          <View style={styles.statusContainer}>
-            {student.latestAttendanceStatus === 'present' ? (
+          {/* <View style={styles.statusContainer}>
+            {student?.latestAttendanceStatus === 'present' ? (
               <Text style={styles.cardDetailsText}>
-                Last Class: <Text style={{ color: colors.primary }}>{student.latestAttendanceStatus}</Text>
+                Last Class: <Text style={{ color: colors.primary }}>{student?.latestAttendanceStatus}</Text>
               </Text>
             ) : (
               <Text style={styles.cardDetailsText}>
-                Last Class: <Text style={{ color: colors.error }}>{student.latestAttendanceStatus}</Text>
+                Last Class: <Text style={{ color: colors.error }}>{student?.latestAttendanceStatus}</Text>
               </Text>
             )}
             <TouchableOpacity
               style={[
                 styles.toggleButton,
-                student.status === 'present' ? styles.toggleButtonPositive : styles.toggleButtonNegative,
+                student?.status === 'present' ? styles.toggleButtonPositive : styles.toggleButtonNegative,
               ]}
               onPress={toggleStatus}
             >
-              <Text style={styles.attendanceStatusText}>{student.status}</Text>
+              <Text style={styles.attendanceStatusText}>{student?.status}</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </View>
     </Card>
@@ -133,7 +143,7 @@ const styles = StyleSheet.create({
   },
   cardDetailsText: {
     ...globalStyles.cardDetailsText,
-    paddingVertical: 4,
+    paddingVertical: 2,
     // borderWidth: 1,
   },
   perIconContainer: {

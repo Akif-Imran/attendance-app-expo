@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, ToastAndroid } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Dialog, Portal, RadioButton, TextInput } from 'react-native-paper';
+import { Button, Dialog, IconButton, Portal, RadioButton, TextInput } from 'react-native-paper';
 import { PaperTheme, colors, gStyles } from '../../theme';
 import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -12,6 +12,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as ImagePicker from 'expo-image-picker';
 import { Features, Pose } from '../../types';
+import { api } from '../../helpers';
 
 const degreeList = [{ key: '1', value: 'BS' }];
 
@@ -36,7 +37,7 @@ const courseList = [
   { key: '4', value: 'VP' },
 ];
 
-const Enroll = () => {
+const AddStudent = () => {
   const [regNo, setRegNo] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -66,6 +67,7 @@ const Enroll = () => {
   const [currentPose, setCurrentPose] = useState<Pose>('Left');
   const [visible, setVisible] = useState<boolean>(false);
   const [remainingPoses, setRemainingPoses] = useState<Pose[]>(['Front', 'Left', 'Right']);
+  const [loading, setLoading] = useState<boolean>(false);
 
   /* const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -149,6 +151,99 @@ const Enroll = () => {
 
   const hideDialog = () => setVisible(false);
 
+  const addNewStudent = () => {
+    setLoading(true);
+    console.log('called');
+
+    let formData = new FormData();
+    let poses = [];
+    for (let image of features) {
+      let localUri = image.uri;
+      poses.push(image.pose);
+      console.log('uri', localUri);
+      let filename = localUri.split('/').pop() || '';
+      console.log('filename', filename);
+      let match = /\.(\w+)$/.exec(filename);
+      console.log('match', match);
+      let type = match ? `image/${match[1]}` : `image`;
+      console.log('type', type);
+      let photo = image;
+
+      formData.append('files', {
+        name: filename,
+        type: type,
+        uri: photo.uri,
+      });
+    }
+    let obj = {
+      regNo,
+      firstName: firstName,
+      lastName: lastName,
+      username: sUsername,
+      password: sPassword,
+      semester: semester,
+      degree: degree,
+      discipline: discipline,
+      section: section,
+      enrolledCourses: enrolledCourses,
+      poses: poses,
+      pFirstName: pFirstName,
+      pLastName: pLastName,
+      pUsername: pUsername,
+      pPassword: pPassword,
+    };
+
+    Object.entries(obj).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((item) => {
+          formData.append(key, item);
+        });
+      } else {
+        formData.append(key, value);
+      }
+    });
+    console.log(JSON.stringify(formData));
+
+    api
+      .post('/student/enroll-new-student', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(JSON.stringify(res.data));
+          const resData = res.data;
+          ToastAndroid.show('Student Added', ToastAndroid.SHORT);
+        }
+      })
+      .catch((err) => {
+        console.error(err.response);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const generateRegNo = () => {
+    api
+      .get('/RegNoSequence/get-next-regNo')
+      .then((res) => {
+        const aridNo: string = res.data;
+        console.log(aridNo);
+        setRegNo(aridNo);
+        ToastAndroid.show('Arid Generated', ToastAndroid.SHORT);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  useEffect(() => {
+    generateRegNo();
+    return () => {};
+  }, []);
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       <Portal>
@@ -206,28 +301,37 @@ const Enroll = () => {
 
         <View>
           <View style={styles.regNoInputContainer}>
-            <TextInput
-              dense
-              value={regNo}
-              mode="outlined"
-              label="Registration No"
-              theme={PaperTheme}
-              outlineColor={colors.textGray}
-              selectionColor={colors.primary}
-              activeOutlineColor={colors.primary}
-              onChangeText={(text) => setRegNo(text)}
-              left={<TextInput.Icon icon="email" color={colors.iconGray} />}
-              right={
-                <TextInput.Icon
-                  icon="information"
-                  color={colors.iconGray}
-                  onPress={() => {
-                    setRegNo('2019-ARID-0069');
-                    ToastAndroid.show('Arid Generated', ToastAndroid.SHORT);
-                  }}
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ flex: 8 }}>
+                <TextInput
+                  dense
+                  value={regNo}
+                  mode="outlined"
+                  editable={false}
+                  label="Registration No"
+                  theme={PaperTheme}
+                  outlineColor={colors.textGray}
+                  selectionColor={colors.primary}
+                  activeOutlineColor={colors.primary}
+                  onChangeText={(text) => setRegNo(text)}
+                  left={<TextInput.Icon icon="email" color={colors.iconGray} />}
+                  // right={
+                  //   <TextInput.Icon
+                  //     icon="information"
+                  //     color={colors.iconGray}
+                  //     onPress={() => {
+                  //       generateRegNo();
+                  //     }}
+                  //   />
+                  // }
                 />
-              }
-            />
+              </View>
+              <View style={{ flex: 2, marginTop: 6, marginLeft: 6 }}>
+                <Button theme={PaperTheme} onPress={() => generateRegNo()} mode="contained">
+                  <MaterialCommunityIcons name="refresh" size={20} color={colors.white} />
+                </Button>
+              </View>
+            </View>
           </View>
           {/* student firstname and lastname */}
           <View style={{ flexDirection: 'row' }}>
@@ -378,7 +482,7 @@ const Enroll = () => {
           </View>
         </View>
 
-        <View style={styles.regNoInputContainer}>
+        {/* <View style={styles.regNoInputContainer}>
           <MultipleSelectList
             data={courseList}
             label="Courses"
@@ -404,7 +508,7 @@ const Enroll = () => {
             }}
             // defaultOption={{ key: '1', value: 'BS' }} //default selected option
           />
-        </View>
+        </View> */}
 
         <View style={{ marginVertical: 4, marginHorizontal: 4 }}>
           <Text style={gStyles.cardTitleText}>Feature Set</Text>
@@ -524,7 +628,14 @@ const Enroll = () => {
           </Button>
         </View>
         <View style={styles.individualButtonsContainer}>
-          <Button mode="contained" theme={PaperTheme} onPress={() => {}}>
+          <Button
+            mode="contained"
+            theme={PaperTheme}
+            onPress={() => {
+              addNewStudent();
+            }}
+            loading={loading}
+          >
             Add
           </Button>
         </View>
@@ -533,7 +644,7 @@ const Enroll = () => {
   );
 };
 
-export default Enroll;
+export default AddStudent;
 
 const styles = StyleSheet.create({
   mainContainer: {

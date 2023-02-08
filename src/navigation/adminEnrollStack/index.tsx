@@ -1,7 +1,7 @@
 import { StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import React, { FC, Dispatch, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Enroll, AddStudent, Enrollment } from '../../screens/admin';
+import { Enroll, AddStudent, Enrollment, Search } from '../../screens/admin';
 import { EnrollmentStackParamsList, EnrollmentStackScreenProps, TeacherStackParamsList } from '../../types';
 import { colors } from '../../theme';
 import globalStyles from '../../theme/globalStyles';
@@ -63,6 +63,13 @@ const TeacherStack: FC<EnrollmentStackProps> = () => {
         component={AddStudent}
         options={{
           title: 'Add Student',
+        }}
+      />
+      <Stack.Screen
+        name="Search"
+        component={Search}
+        options={{
+          title: 'Search',
         }}
       />
       <Stack.Screen
