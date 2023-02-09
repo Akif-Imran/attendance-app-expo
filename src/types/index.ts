@@ -271,3 +271,9 @@ interface PoseObj {
     pose: Pose;
 }
 export type Features = ImageInfo & PoseObj;
+
+export type CourseResponseObj = {
+    courseCode: string;
+    courseName: string;
+    creditHours: number;
+}

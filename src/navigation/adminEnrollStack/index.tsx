@@ -76,7 +76,7 @@ const TeacherStack: FC<EnrollmentStackProps> = () => {
         name="Enrollment"
         component={Enrollment}
         options={({ route }) => ({
-          title: `Enroll`,
+          title: `Enrollment`,
           headerRightContainerStyle: {
             paddingRight: 8,
             flexDirection: 'row',

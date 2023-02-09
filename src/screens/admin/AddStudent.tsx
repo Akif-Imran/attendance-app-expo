@@ -69,30 +69,6 @@ const AddStudent = () => {
   const [remainingPoses, setRemainingPoses] = useState<Pose[]>(['Front', 'Left', 'Right']);
   const [loading, setLoading] = useState<boolean>(false);
 
-  /* const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    try {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: false,
-        allowsMultipleSelection: false,
-        // aspect: [4, 3],
-        quality: 1,
-      });
-      console.log(result);
-      if (!result.cancelled) {
-        if ('selected' in result) {
-          setFeatures({ ...result.selected });
-          ToastAndroid.show('Make sure all Images are selected!', ToastAndroid.SHORT);
-        } else {
-          setFeatures([result]);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }; */
-
   const captureImage = async () => {
     try {
       let result = await ImagePicker.launchCameraAsync({

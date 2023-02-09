@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, ToastAndroid } from 'react-native';
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Dialog, Portal, RadioButton, TextInput } from 'react-native-paper';
 import { PaperTheme, colors, gStyles } from '../../theme';
@@ -11,8 +11,9 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as ImagePicker from 'expo-image-picker';
-import { ApiStudentObject, EnrollmentStackScreenProps, Features, Pose } from '../../types';
+import { ApiStudentObject, CourseResponseObj, EnrollmentStackScreenProps, Features, Pose } from '../../types';
 import { useRoute } from '@react-navigation/native';
+import { api, session } from '../../helpers';
 
 const degreeList = [{ key: '1', value: 'BS' }];
 
@@ -53,6 +54,7 @@ const Enrollment = () => {
   const [pLastName, setPLastName] = useState<string>('');
   const [pUsername, setPUsername] = useState<string>('');
   const [pPassword, setPPassword] = useState<string>('456');
+  const [offeredCourses, setOfferedCourses] = useState<any[]>([]);
   // const [features, setFeatures] = useState<number[]>([]);
 
   const [secureEntry, setSecureEntry] = useState<boolean>(true);
@@ -69,30 +71,8 @@ const Enrollment = () => {
   const [currentPose, setCurrentPose] = useState<Pose>('Left');
   const [visible, setVisible] = useState<boolean>(false);
   const [remainingPoses, setRemainingPoses] = useState<Pose[]>(['Front', 'Left', 'Right']);
-
-  /* const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    try {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: false,
-        allowsMultipleSelection: false,
-        // aspect: [4, 3],
-        quality: 1,
-      });
-      console.log(result);
-      if (!result.cancelled) {
-        if ('selected' in result) {
-          setFeatures({ ...result.selected });
-          ToastAndroid.show('Make sure all Images are selected!', ToastAndroid.SHORT);
-        } else {
-          setFeatures([result]);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }; */
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isPromoting, setIsPromoting] = useState<boolean>(false);
 
   const captureImage = async () => {
     try {
@@ -151,6 +131,133 @@ const Enrollment = () => {
   };
 
   const hideDialog = () => setVisible(false);
+
+  const getOfferedCourses = () => {
+    api
+      .get(`/courses/get-offered-courses?classId=${data?.classId}&session=${session}`)
+      .then((res) => {
+        if (res.status === 200) {
+          const resData: CourseResponseObj[] = res.data;
+          const filtered = resData.map((course) => ({ key: course.courseCode, value: course.courseName }));
+          setOfferedCourses(filtered);
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const promoteStudent = () => {
+    setIsPromoting(true);
+    let formData = new FormData();
+    let obj = {
+      regNo,
+      firstName: firstName,
+      lastName: lastName,
+      semester: semester,
+      degree,
+      discipline,
+      section,
+    };
+
+    Object.entries(obj).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((item) => {
+          formData.append(key, item);
+        });
+      } else {
+        formData.append(key, value);
+      }
+    });
+    api
+      .post(`/student/promote-student?session=${session}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          const resData: CourseResponseObj[] = res.data;
+          const filtered = resData.map((course) => ({ key: course.courseCode, value: course.courseName }));
+          setOfferedCourses(filtered);
+        }
+      })
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setIsPromoting(false);
+      });
+  };
+
+  useLayoutEffect(() => {
+    getOfferedCourses();
+    return () => {};
+  }, []);
+
+  const enrollStudent = () => {
+    setLoading(true);
+    console.log('called');
+
+    let formData = new FormData();
+    let poses = [];
+    for (let image of features) {
+      let localUri = image.uri;
+      poses.push(image.pose);
+      console.log('uri', localUri);
+      let filename = localUri.split('/').pop() || '';
+      console.log('filename', filename);
+      let match = /\.(\w+)$/.exec(filename);
+      console.log('match', match);
+      let type = match ? `image/${match[1]}` : `image`;
+      console.log('type', type);
+      let photo = image;
+
+      formData.append('files', {
+        name: filename,
+        type: type,
+        uri: photo.uri,
+      });
+    }
+    let obj = {
+      regNo,
+      firstName: firstName,
+      lastName: lastName,
+      semester: semester,
+      degree,
+      discipline,
+      section,
+      enrolledCourses: enrolledCourses,
+      poses: poses,
+    };
+
+    Object.entries(obj).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((item) => {
+          formData.append(key, item);
+        });
+      } else {
+        formData.append(key, value);
+      }
+    });
+    console.log(JSON.stringify(formData));
+
+    api
+      .post(`/student/enroll-student?session=${session}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(JSON.stringify(res.data));
+          const resData = res.data;
+          ToastAndroid.show('Student Enrolled', ToastAndroid.SHORT);
+        }
+      })
+      .catch((err) => {
+        console.error(err.response);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -352,26 +459,42 @@ const Enrollment = () => {
         </View> */}
 
         <View style={styles.regNoInputContainer}>
-          <TextInput
-            dense
-            blurOnSubmit
-            value={semester}
-            mode="outlined"
-            label="Semester"
-            theme={PaperTheme}
-            outlineColor={colors.textGray}
-            selectionColor={colors.primary}
-            activeOutlineColor={colors.primary}
-            onChangeText={(text) => setSemester(text)}
-            keyboardType="number-pad"
-          />
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 6 }}>
+              <TextInput
+                dense
+                blurOnSubmit
+                value={semester}
+                mode="outlined"
+                label="Semester"
+                theme={PaperTheme}
+                outlineColor={colors.textGray}
+                selectionColor={colors.primary}
+                activeOutlineColor={colors.primary}
+                onChangeText={(text) => setSemester(text)}
+                keyboardType="number-pad"
+              />
+            </View>
+            <View style={{ flex: 4, marginTop: 6, marginLeft: 4 }}>
+              <Button
+                mode="contained"
+                theme={PaperTheme}
+                onPress={() => {
+                  promoteStudent();
+                }}
+                loading={isPromoting}
+              >
+                Promote
+              </Button>
+            </View>
+          </View>
         </View>
 
         <View style={styles.regNoInputContainer}>
           <MultipleSelectList
-            data={courseList}
+            data={offeredCourses}
             label="Courses"
-            save="value"
+            save="key"
             placeholder="Courses"
             fontFamily="Visby-Medium"
             search={true}
@@ -517,8 +640,15 @@ const Enrollment = () => {
           </Button>
         </View>
         <View style={styles.individualButtonsContainer}>
-          <Button mode="contained" theme={PaperTheme} onPress={() => {}}>
-            Add
+          <Button
+            mode="contained"
+            theme={PaperTheme}
+            onPress={() => {
+              enrollStudent();
+            }}
+            loading={loading}
+          >
+            Enroll
           </Button>
         </View>
       </View>

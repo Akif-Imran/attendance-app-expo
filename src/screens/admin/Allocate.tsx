@@ -131,6 +131,7 @@ const Allocate = () => {
       })
       .then((res) => {
         console.log(res.data);
+        ToastAndroid.show('Allocation successful!', ToastAndroid.SHORT);
       })
       .catch((err) => console.error(err));
 

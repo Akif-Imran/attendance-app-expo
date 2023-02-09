@@ -67,7 +67,10 @@ const _StudentCard: React.FC<_StudentCard> = ({ student }) => {
                 {student.degree}
                 {student.discipline}
               </Text>
-              <Text style={styles.cardDetailsText}>{student.semester}</Text>
+              <Text style={styles.cardDetailsText}>
+                {student.semester}
+                {student.section}
+              </Text>
             </View>
             {/* <View>
               <Text style={[styles.courseDetailsText, { color: getColor(percentage.toFixed(1)) }]}>
